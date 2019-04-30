@@ -1,0 +1,18 @@
+{
+  "parser": "babel-eslint",
+  "extends": ["plugin:react/recommended"],
+  "rules": {
+    "no-console":"warn",
+    "semi-spacing":"error",
+    "comma-dangle":"error",
+    "semi":"error",
+    "no-undef":"off",
+    "no-undefined":"off",
+    "no-trailing-spaces":"error",
+    "no-multi-spaces":"error",
+    "space-before-blocks":"error",
+    "comma-spacing":"error",
+    "key-spacing":"error"
+
+  }
+}

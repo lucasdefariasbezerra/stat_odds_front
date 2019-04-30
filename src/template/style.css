@@ -1,0 +1,15 @@
+.color {
+    background-color: yellow;
+    height: 500px;
+    width: 500px;
+    margin-left: 30%
+}
+
+.uploadContainer {
+    padding: 12px;
+}
+
+.showButton {
+    display: block !important;
+    
+}

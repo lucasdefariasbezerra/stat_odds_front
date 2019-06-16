@@ -7,7 +7,7 @@ ul.left {
 ul.center {
     list-style: none;
     margin-left: 25%;
-    width: 50%;
+    width: 40%;
 }
 
 .container {
@@ -16,7 +16,7 @@ ul.center {
  
 li.list-style {
     box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.473);
-     padding: 15px;
+     padding: 10px;
      margin-top: 4px;
      display: flex;
      align-items: center;
@@ -31,9 +31,10 @@ h2 {
 }
  
 li.list-style > img {
-    width: 10%;
-    max-width: 10%;
-    border-radius: 35px;
+    width: 55px;
+    height: 55px;
+    max-width: 55px;
+    border-radius: 65px;
     flex: 1;
 }
  

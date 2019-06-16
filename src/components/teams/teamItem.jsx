@@ -8,7 +8,7 @@ const TeamItem = (props) => {
     console.log('team ', team);
     return(
        <li className="list-style">
-           <img src="https://http2.mlstatic.com/adesivo-de-parede-decorativo-escudo-de-time-real-madrid-D_NQ_NP_618729-MLB26114571181_102017-F.jpg" />
+           <img src="https://historias.pontosmultiplus.com.br/wp-content/uploads/2018/06/Long-Beach_Foto_-Jon-Bilous-SHutterstock.jpg" />
            <span className="text">{team.name}</span>
        </li>
    );

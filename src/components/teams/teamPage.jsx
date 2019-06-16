@@ -10,33 +10,33 @@ import PropTypes from 'prop-types';
 class TeamPage extends Component {
 
     static propTypes = {
-        list: PropTypes.arrayOf(PropTypes.any),
+        page: PropTypes.objectOf(PropTypes.any),
         fetchList: PropTypes.func
     };
 
     static defaultProps = {
-        list: [],
+        page: {},
         fetchList: () => {}
     };
 
     componentDidMount() {
         const { fetchList } = this.props;
-        fetchList();
+        fetchList(1, 10);
     }
 
     render() {
-        const { list } = this.props;
-        console.log('list ', list);
+        const { page } = this.props;
+        console.log('page ', page);
         return (
             <Feed
              position="center"
              content="TEAM"
-             list={list} />
+             list={page.items} />
         );
     }
 }
 
-const mapStateToProps = state => ({ list: state.team.list });
+const mapStateToProps = state => ({ page: state.team.page });
 
 const mapDispatchToProps = dispatch => bindActionCreators({ fetchList }, dispatch);
 export default connect(mapStateToProps, mapDispatchToProps)(TeamPage);

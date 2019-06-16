@@ -4,6 +4,7 @@ import '../../template/style.css';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { fetchList } from './teamAction';
+import Feed from './feed';
 import PropTypes from 'prop-types';
 
 class TeamPage extends Component {
@@ -27,7 +28,10 @@ class TeamPage extends Component {
         const { list } = this.props;
         console.log('list ', list);
         return (
-            <div>Test</div>
+            <Feed
+             position="center"
+             content="TEAM"
+             list={list} />
         );
     }
 }

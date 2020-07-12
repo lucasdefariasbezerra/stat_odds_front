@@ -17,5 +17,6 @@ const TEAM_PAGE = `
 }`;
 
 export const queryTeams = (pageNum, pageSize) => {
+    console.log('query teams');
     return request(url, TEAM_PAGE, { pageNum, pageSize });
 };

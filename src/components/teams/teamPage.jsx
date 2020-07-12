@@ -5,9 +5,14 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { fetchList } from './teamAction';
 import Feed from './feed';
+import Paginator from '../shared/paginator';
 import PropTypes from 'prop-types';
 
 class TeamPage extends Component {
+
+    state = {
+        currentPageNum: 0
+    }
 
     static propTypes = {
         page: PropTypes.objectOf(PropTypes.any),
@@ -21,17 +26,26 @@ class TeamPage extends Component {
 
     componentDidMount() {
         const { fetchList } = this.props;
-        fetchList(1, 10);
+        fetchList(0, 7);
+    }
+
+    hadlePageChange = (current, pageSize) => {
+        const { fetchList } = this.props;
+        fetchList((current - 1), pageSize);
     }
 
     render() {
         const { page } = this.props;
-        console.log('page ', page);
+        const { currentPageNum } = this.state;
         return (
-            <Feed
-             position="center"
-             content="TEAM"
-             list={page.items} />
+            <div>
+                <Feed position="center"
+                    content="TEAM"
+                    list={page.items} />
+                <Paginator pageNum={currentPageNum}
+                           total={page.total}
+                           pageEvent={this.hadlePageChange} />
+            </div>
         );
     }
 }

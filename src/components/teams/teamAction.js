@@ -8,7 +8,7 @@ const handleFetchList = (data) => {
 
 export const fetchList = (pageNum, pageSize) => {
     return dispatch => {
-        queryTeams(pageNum, pageSize).then((data) => {
+        return queryTeams(pageNum, pageSize).then((data) => {
             dispatch(handleFetchList(data));
         });
     };

@@ -50,6 +50,16 @@ li.list-style > span {
   flex: 2;
   font-family: 'Quicksand', sans-serif;
 }
+
+.details-text {
+    font-size: 15px;
+    font-weight: 600;
+    font-family: 'Quicksand', sans-serif;  
+}
+
+div.details-text > p {
+    margin-bottom: 2px;
+}
  
 .actionDetail {
     flex: 1;

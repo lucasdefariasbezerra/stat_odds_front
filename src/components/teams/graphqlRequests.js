@@ -16,7 +16,23 @@ const TEAM_PAGE = `
  }
 }`;
 
+const TEAM_DETAILS = `
+  query teamDetails($id: ID) {
+    team(id: $id) {
+      id
+      name
+      sport {
+        name
+      }
+    }
+}`;
+
 export const queryTeams = (pageNum, pageSize) => {
     console.log('query teams');
     return request(url, TEAM_PAGE, { pageNum, pageSize });
+};
+
+export const queryTeamDetails = (id) => {
+  console.log('query teams');
+  return request(url, TEAM_DETAILS, { id });
 };

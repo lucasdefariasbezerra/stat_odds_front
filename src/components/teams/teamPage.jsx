@@ -3,30 +3,38 @@ import React, { Component } from 'react';
 import '../../template/style.css';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { fetchList } from './teamAction';
+import { fetchList, fetchTeamDetails } from './teamAction';
 import Feed from './feed';
 import Paginator from '../shared/paginator';
 import PropTypes from 'prop-types';
 
 class TeamPage extends Component {
-
     state = {
         currentPageNum: 0
     }
 
     static propTypes = {
         page: PropTypes.objectOf(PropTypes.any),
-        fetchList: PropTypes.func
+        teamDetails: PropTypes.objectOf(PropTypes.any),
+        fetchList: PropTypes.func,
+        fetchTeamDetails: PropTypes.func
     };
 
     static defaultProps = {
         page: {},
-        fetchList: () => {}
+        teamDetails: {},
+        fetchList: () => {},
+        fetchTeamDetails: () => {}
     };
 
     componentDidMount() {
         const { fetchList } = this.props;
         fetchList(0, 7);
+    }
+
+    handleDetailsFetch = (id) => {
+        const { fetchTeamDetails } = this.props;
+        fetchTeamDetails(id);
     }
 
     hadlePageChange = (current, pageSize) => {
@@ -35,13 +43,15 @@ class TeamPage extends Component {
     }
 
     render() {
-        const { page } = this.props;
+        const { page, teamDetails } = this.props;
         const { currentPageNum } = this.state;
         return (
             <div>
                 <Feed position="center"
                     content="TEAM"
-                    list={page.items} />
+                    list={page.items}
+                    item={teamDetails}
+                    onDetailsFetch={this.handleDetailsFetch} />
                 <Paginator pageNum={currentPageNum}
                            total={page.total}
                            pageEvent={this.hadlePageChange} />
@@ -50,7 +60,7 @@ class TeamPage extends Component {
     }
 }
 
-const mapStateToProps = state => ({ page: state.team.page });
+const mapStateToProps = state => ({ page: state.team.page, teamDetails: state.team.teamDetails });
 
-const mapDispatchToProps = dispatch => bindActionCreators({ fetchList }, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators({ fetchList, fetchTeamDetails }, dispatch);
 export default connect(mapStateToProps, mapDispatchToProps)(TeamPage);

@@ -10,7 +10,7 @@ const TeamItem = (props) => {
        <li className="list-style">
            <img src="https://historias.pontosmultiplus.com.br/wp-content/uploads/2018/06/Long-Beach_Foto_-Jon-Bilous-SHutterstock.jpg" />
            <span className="text">{team.name}</span>
-            <SolutionOutlined style={{fontSize: '18px'}} style={{ cursor: 'pointer' }} onClick={() => displayItemDetails(team.id, 'team')}/>
+           <SolutionOutlined style={{fontSize: '20px', cursor: 'pointer'}} onClick={() => displayItemDetails(team.id, 'team')}/>
        </li>
    );
 };

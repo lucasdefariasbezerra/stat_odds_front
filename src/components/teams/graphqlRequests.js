@@ -28,11 +28,9 @@ const TEAM_DETAILS = `
 }`;
 
 export const queryTeams = (pageNum, pageSize) => {
-    console.log('query teams');
     return request(url, TEAM_PAGE, { pageNum, pageSize });
 };
 
 export const queryTeamDetails = (id) => {
-  console.log('query teams');
   return request(url, TEAM_DETAILS, { id });
 };

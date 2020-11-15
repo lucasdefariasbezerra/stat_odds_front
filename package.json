@@ -63,6 +63,7 @@
     "@babel/runtime": "^7.4.4",
     "antd": "^3.16.6",
     "cross-env": "5.1.5",
+    "dotenv-webpack": "^4.0.0",
     "graphql-request": "^1.8.2",
     "prop-types": "^15.6.2",
     "react": "^16.5.2",

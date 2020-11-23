@@ -1,20 +1,18 @@
-import { queryTeams, queryTeamDetails } from './graphqlRequests';
+import { queryTeams, queryTeamDetails, querySports } from './graphqlRequests';
 import * as TeamActionType from './type';
 
-const handleFetchList = (data) => {
-    console.log('data ', data);
-    return { type: TeamActionType.LIST_TEAM, payload: data.paginatedTeams };
+const handleFetchList = (type, content) => {
+    return { type, payload: content };
 };
 
 const handleTeamDetails = (data) => {
-    console.log('details ', data);
     return { type: TeamActionType.TEAM_DETAILS, payload: data.team };
 };
 
 export const fetchList = (pageNum, pageSize) => {
     return dispatch => {
         return queryTeams(pageNum, pageSize).then((data) => {
-            dispatch(handleFetchList(data));
+            dispatch(handleFetchList(TeamActionType.LIST_TEAM, data.paginatedTeams));
         });
     };
 };
@@ -23,6 +21,14 @@ export const fetchTeamDetails = (id) => {
     return dispatch => {
         return queryTeamDetails(id).then((data) => {
             dispatch(handleTeamDetails(data));
+        });
+    };
+};
+
+export const fetchSports = () => {
+    return dispatch => {
+        return querySports().then(data => {
+            dispatch(handleFetchList(TeamActionType.SPORT_LIST, data.sports));
         });
     };
 };

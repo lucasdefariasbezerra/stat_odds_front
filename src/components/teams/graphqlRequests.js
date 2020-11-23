@@ -22,8 +22,17 @@ const TEAM_DETAILS = `
       id
       name
       sport {
+        id
         name
       }
+    }
+}`;
+
+const SPORTS = `
+  query sports {
+    sports {
+      id
+      name
     }
 }`;
 
@@ -33,4 +42,8 @@ export const queryTeams = (pageNum, pageSize) => {
 
 export const queryTeamDetails = (id) => {
   return request(url, TEAM_DETAILS, { id });
+};
+
+export const querySports = () => {
+  return request(url, SPORTS);
 };

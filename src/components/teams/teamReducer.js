@@ -2,7 +2,8 @@ import * as TeamActionType from './type';
 
 const INITIAL_STATE = {
     page: {},
-    teamDetails: {}
+    teamDetails: {},
+    sports: []
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -11,6 +12,8 @@ export default (state = INITIAL_STATE, action) => {
             return { ...state, page: action.payload };
         case TeamActionType.TEAM_DETAILS:
             return { ...state, teamDetails: action.payload };
+        case TeamActionType.SPORT_LIST:
+            return { ...state, sports: action.payload };
         default: {
             return state;
         }

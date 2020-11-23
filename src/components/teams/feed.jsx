@@ -1,12 +1,17 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import TeamItem from './teamItem';
-import { Modal } from 'antd';
+import ViewItem from '../shared/viewItem';
+import EditTeamForm from './editTeamForm';
+import { Modal, Checkbox } from 'antd';
 
 import '../../template/style.css';
 
 class Feed extends Component {
-    state = { visible: false };
+    state = {
+    visible: false,
+    isEditMode: false
+    };
 
     static propTypes = {
         position: PropTypes.string,
@@ -40,12 +45,28 @@ class Feed extends Component {
         return list.map((item) => (<TeamItem key={item.id} team={item} displayItemDetails={this.displayItemDetails} />));
     }
 
+    onChange = (e) => {
+        const { checked } = e.target;
+        this.setState({ isEditMode: checked });
+    }
+
     renderTeamDetails = () => {
       const { item } = this.props;
+      const { isEditMode } = this.state;
+      const fieldList = [
+          {
+              field: 'Team Name',
+              value: item.name
+          },
+          {
+            field: 'Sport',
+            value: item.sport && item.sport.name
+          }
+      ];
       return item.sport && (
          <div className='details-text'>
-            <p>{`Team Name: ${item.name}`}</p>
-            <p>{`Sport: ${item.sport.name}`}</p>
+            { isEditMode ? (<EditTeamForm team={item}/>) : (<ViewItem fieldList={fieldList}/>) }
+            <Checkbox onChange={this.onChange}>edit</Checkbox>
         </div>
       );
     }
@@ -69,6 +90,7 @@ class Feed extends Component {
                     {this.mapContent(content).list()}
                     <Modal title="Details"
                       visible={visible}
+                      
                       onCancel={() => this.handleModalDisplay(!visible)}
                       onOk={() => this.handleModalDisplay(!visible)}>
                           {this.mapContent(content).detail()}

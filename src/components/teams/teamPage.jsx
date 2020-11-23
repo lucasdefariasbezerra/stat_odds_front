@@ -44,6 +44,7 @@ class TeamPage extends Component {
 
     render() {
         const { page, teamDetails } = this.props;
+        console.log('team page teamDetails ', teamDetails);
         const { currentPageNum } = this.state;
         return (
             <div>

@@ -3,14 +3,15 @@ import PropTypes from 'prop-types';
 import TeamItem from './teamItem';
 import ViewItem from '../shared/viewItem';
 import EditTeamForm from './editTeamForm';
-import { Modal, Checkbox } from 'antd';
+import { Modal, Checkbox, Button } from 'antd';
 
 import '../../template/style.css';
 
 class Feed extends Component {
     state = {
     visible: false,
-    isEditMode: false
+    isEditMode: false,
+    updateObject: {}
     };
 
     static propTypes = {
@@ -30,7 +31,7 @@ class Feed extends Component {
     };
 
     displayItemDetails = (id) => {
-        const { onDetailsFetch } = this.props;
+        const { onDetailsFetch, item } = this.props;
         const { visible } = this.state;
         this.handleModalDisplay(!visible);
         onDetailsFetch(id);
@@ -38,6 +39,11 @@ class Feed extends Component {
 
     handleModalDisplay = (visible) => {
         this.setState({ visible });
+    }
+
+    handleUpdate = () => {
+        const { item } = this.props;
+        console.log('item ', item);
     }
 
     mapTeams = () => {
@@ -83,16 +89,24 @@ class Feed extends Component {
 
     render() {
         const { position, content } = this.props;
-        const { visible } = this.state;
+        const { visible, isEditMode } = this.state;
         return(
             <div>
                 <ul className={position}>
                     {this.mapContent(content).list()}
                     <Modal title="Details"
                       visible={visible}
-                      
                       onCancel={() => this.handleModalDisplay(!visible)}
-                      onOk={() => this.handleModalDisplay(!visible)}>
+                      onOk={() => this.handleModalDisplay(!visible)}
+                      footer={[
+                        <Button key="back" onClick={() => this.handleModalDisplay(!visible)}>
+                          Return
+                        </Button>,
+                        <Button key="submit" type="primary" disabled={!isEditMode}
+                                onClick={this.handleUpdate}>
+                          Submit
+                        </Button>
+                      ]}>
                           {this.mapContent(content).detail()}
                       </Modal>
                 </ul>

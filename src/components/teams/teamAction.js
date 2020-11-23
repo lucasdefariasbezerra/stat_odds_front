@@ -9,6 +9,12 @@ const handleTeamDetails = (data) => {
     return { type: TeamActionType.TEAM_DETAILS, payload: data.team };
 };
 
+export const handleUpdate = (currentObject, field, value) => {
+   const newObject = { ...currentObject, [field]: value};
+   console.log('new object ', newObject);
+   return { type: TeamActionType.UPDATE_TEAM, payload: newObject };
+};
+
 export const fetchList = (pageNum, pageSize) => {
     return dispatch => {
         return queryTeams(pageNum, pageSize).then((data) => {

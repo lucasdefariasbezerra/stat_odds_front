@@ -7,6 +7,7 @@ const INITIAL_STATE = {
 };
 
 export default (state = INITIAL_STATE, action) => {
+    console.log('action ', action);
     switch (action.type) {
         case TeamActionType.LIST_TEAM:
             return { ...state, page: action.payload };
@@ -14,6 +15,8 @@ export default (state = INITIAL_STATE, action) => {
             return { ...state, teamDetails: action.payload };
         case TeamActionType.SPORT_LIST:
             return { ...state, sports: action.payload };
+        case TeamActionType.UPDATE_TEAM:
+            return { ...state, teamDetails: action.payload };
         default: {
             return state;
         }

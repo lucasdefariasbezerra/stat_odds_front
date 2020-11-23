@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Input, Select } from 'antd';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { fetchSports } from './teamAction';
+import { fetchSports, handleUpdate } from './teamAction';
 
 const { Option } = Select;
 
@@ -18,18 +18,27 @@ class EditTeamForm extends Component {
     static propTypes = {
         team: PropTypes.objectOf(PropTypes.any),
         sports: PropTypes.arrayOf(PropTypes.any),
-        fetchSports: PropTypes.func
+        fetchSports: PropTypes.func,
+        handleUpdate: PropTypes.func
     };
 
     static defaultProps = {
         team: {},
         sports: [],
-        fetchSports: () => {}
+        fetchSports: () => {},
+        handleUpdate: () => {}
     };
 
     onChange = (e) => {
+        const { handleUpdate, team } = this.props;
         const { name, value } = e.target;
-        this.setState({ [name]: value });
+        handleUpdate(team, name, value);
+    }
+
+    handleChange = (value) => {
+        const { handleUpdate, team } = this.props;
+        const sport = { id: value };
+        handleUpdate(team, 'sport', sport);
     }
 
     mapSports = (sports) => {
@@ -39,13 +48,11 @@ class EditTeamForm extends Component {
     componentDidMount() {
         this.props;
         const { fetchSports } = this.props;
-        const { name, sport } = this.props.team;
         fetchSports();
-        this.setState({ name, sport });
     }
 
     render() {
-        const { name, sport } = this.state;
+        const { name, sport } = this.props.team;
         const { sports } = this.props;
         return(
             <div className='edit-container'>
@@ -55,7 +62,7 @@ class EditTeamForm extends Component {
                 </div>
                 {sport.name && (<div className='form-item'>
                     <p>sport:</p>
-                    <Select defaultValue={sport.name} style={{ width: 225 }}>
+                    <Select defaultValue={sport.name} onChange={this.handleChange} style={{ width: 225 }}>
                         {this.mapSports(sports)}
                     </Select>
                 </div>)}
@@ -65,5 +72,5 @@ class EditTeamForm extends Component {
 }
 
 const mapStateToProps = state => ({ sports: state.team.sports });
-const mapDispatchToProps = dispatch => bindActionCreators({ fetchSports }, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators({ fetchSports, handleUpdate }, dispatch);
 export default connect(mapStateToProps, mapDispatchToProps)(EditTeamForm);

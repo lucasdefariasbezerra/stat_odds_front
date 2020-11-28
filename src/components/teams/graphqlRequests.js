@@ -36,6 +36,15 @@ const SPORTS = `
     }
 }`;
 
+const UPDATE_TEAM = `
+mutation updateTeams($team:teamRequestPayload) {
+  updateTeams(teamPayload:$team) {
+    status
+    description
+  }
+}
+`;
+
 export const queryTeams = (pageNum, pageSize) => {
     return request(url, TEAM_PAGE, { pageNum, pageSize });
 };
@@ -46,4 +55,8 @@ export const queryTeamDetails = (id) => {
 
 export const querySports = () => {
   return request(url, SPORTS);
+};
+
+export const updateTeams = (team) => {
+  return request(url, UPDATE_TEAM, { team });
 };

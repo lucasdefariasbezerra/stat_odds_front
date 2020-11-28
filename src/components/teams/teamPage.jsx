@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import '../../template/style.css';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { fetchList, fetchTeamDetails } from './teamAction';
+import { fetchList, fetchTeamDetails, executeUpdate, changeLoadingState } from './teamAction';
 import Feed from './feed';
 import Paginator from '../shared/paginator';
 import PropTypes from 'prop-types';
@@ -17,14 +17,18 @@ class TeamPage extends Component {
         page: PropTypes.objectOf(PropTypes.any),
         teamDetails: PropTypes.objectOf(PropTypes.any),
         fetchList: PropTypes.func,
-        fetchTeamDetails: PropTypes.func
+        fetchTeamDetails: PropTypes.func,
+        executeUpdate: PropTypes.func,
+        changeLoadingState: PropTypes.func
     };
 
     static defaultProps = {
         page: {},
         teamDetails: {},
         fetchList: () => {},
-        fetchTeamDetails: () => {}
+        fetchTeamDetails: () => {},
+        executeUpdate: () => {},
+        changeLoadingState: () => {}
     };
 
     componentDidMount() {
@@ -42,9 +46,15 @@ class TeamPage extends Component {
         fetchList((current - 1), pageSize);
     }
 
+    handleTeamUpdate = () => {
+        const { teamDetails, executeUpdate, changeLoadingState } = this.props;
+        console.log('teamDetails ', teamDetails);
+        executeUpdate(teamDetails);
+        changeLoadingState(true);
+    }
+
     render() {
         const { page, teamDetails } = this.props;
-        console.log('team page teamDetails ', teamDetails);
         const { currentPageNum } = this.state;
         return (
             <div>
@@ -52,7 +62,8 @@ class TeamPage extends Component {
                     content="TEAM"
                     list={page.items}
                     item={teamDetails}
-                    onDetailsFetch={this.handleDetailsFetch} />
+                    onDetailsFetch={this.handleDetailsFetch}
+                    executeUpdate={this.handleTeamUpdate} />
                 <Paginator pageNum={currentPageNum}
                            total={page.total}
                            pageEvent={this.hadlePageChange} />
@@ -63,5 +74,6 @@ class TeamPage extends Component {
 
 const mapStateToProps = state => ({ page: state.team.page, teamDetails: state.team.teamDetails });
 
-const mapDispatchToProps = dispatch => bindActionCreators({ fetchList, fetchTeamDetails }, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators({ fetchList, fetchTeamDetails,
+                                                            executeUpdate, changeLoadingState }, dispatch);
 export default connect(mapStateToProps, mapDispatchToProps)(TeamPage);

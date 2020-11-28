@@ -8,6 +8,7 @@ import { fetchSports, handleUpdate } from './teamAction';
 const { Option } = Select;
 
 import '../../template/style.css';
+const sportMap = {};
 
 class EditTeamForm extends Component {
     state = {
@@ -18,6 +19,7 @@ class EditTeamForm extends Component {
     static propTypes = {
         team: PropTypes.objectOf(PropTypes.any),
         sports: PropTypes.arrayOf(PropTypes.any),
+        loading: PropTypes.bool,
         fetchSports: PropTypes.func,
         handleUpdate: PropTypes.func
     };
@@ -25,8 +27,7 @@ class EditTeamForm extends Component {
     static defaultProps = {
         team: {},
         sports: [],
-        fetchSports: () => {},
-        handleUpdate: () => {}
+        fetchSports: () => {}
     };
 
     onChange = (e) => {
@@ -37,11 +38,14 @@ class EditTeamForm extends Component {
 
     handleChange = (value) => {
         const { handleUpdate, team } = this.props;
-        const sport = { id: value };
+        const sport = { id: value, name: sportMap[value] };
         handleUpdate(team, 'sport', sport);
     }
 
     mapSports = (sports) => {
+        sports.forEach(sp => {
+            sportMap[sp.id] = sp.name;
+        });
         return sports.map((currentSport) => (<Option key={currentSport.id} value={currentSport.id}>{currentSport.name}</Option>));
     }
 
@@ -60,9 +64,10 @@ class EditTeamForm extends Component {
                     <p>team name:</p>
                     <Input size="default" value={name} name="name" onChange={this.onChange} style={{ width: 225 }} />
                 </div>
-                {sport.name && (<div className='form-item'>
+                {sport.name && (
+                <div className='form-item'>
                     <p>sport:</p>
-                    <Select defaultValue={sport.name} onChange={this.handleChange} style={{ width: 225 }}>
+                    <Select value={sport.name} onChange={this.handleChange} style={{ width: 225 }}>
                         {this.mapSports(sports)}
                     </Select>
                 </div>)}
@@ -71,6 +76,6 @@ class EditTeamForm extends Component {
     }
 }
 
-const mapStateToProps = state => ({ sports: state.team.sports });
+const mapStateToProps = state => ({ sports: state.team.sports, loading: state.appState.isLoading });
 const mapDispatchToProps = dispatch => bindActionCreators({ fetchSports, handleUpdate }, dispatch);
 export default connect(mapStateToProps, mapDispatchToProps)(EditTeamForm);

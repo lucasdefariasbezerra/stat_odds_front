@@ -19,7 +19,8 @@ class Feed extends Component {
         content: PropTypes.string,
         list: PropTypes.arrayOf(PropTypes.any),
         item: PropTypes.objectOf(PropTypes.any),
-        onDetailsFetch: PropTypes.func
+        onDetailsFetch: PropTypes.func,
+        executeUpdate: PropTypes.func
     };
 
     static defaultProps = {
@@ -27,11 +28,12 @@ class Feed extends Component {
         content: "",
         list: [],
         item: {},
-        onDetailsFetch: () => {}
+        onDetailsFetch: () => {},
+        executeUpdate: () => {}
     };
 
     displayItemDetails = (id) => {
-        const { onDetailsFetch, item } = this.props;
+        const { onDetailsFetch } = this.props;
         const { visible } = this.state;
         this.handleModalDisplay(!visible);
         onDetailsFetch(id);
@@ -42,8 +44,8 @@ class Feed extends Component {
     }
 
     handleUpdate = () => {
-        const { item } = this.props;
-        console.log('item ', item);
+        const { executeUpdate } = this.props;
+        executeUpdate();
     }
 
     mapTeams = () => {
@@ -102,7 +104,7 @@ class Feed extends Component {
                         <Button key="back" onClick={() => this.handleModalDisplay(!visible)}>
                           Return
                         </Button>,
-                        <Button key="submit" type="primary" disabled={!isEditMode}
+                        <Button key="submit" type="primary" disabled={!isEditMode} loading={false}
                                 onClick={this.handleUpdate}>
                           Submit
                         </Button>

@@ -1,4 +1,4 @@
-import * as TeamActionType from './type';
+import * as TeamActionType from '../shared/type';
 
 const INITIAL_STATE = {
     page: {},
@@ -7,7 +7,6 @@ const INITIAL_STATE = {
 };
 
 export default (state = INITIAL_STATE, action) => {
-    console.log('action ', action);
     switch (action.type) {
         case TeamActionType.LIST_TEAM:
             return { ...state, page: action.payload };

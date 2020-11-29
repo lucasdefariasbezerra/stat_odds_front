@@ -4,14 +4,12 @@ import TeamItem from './teamItem';
 import ViewItem from '../shared/viewItem';
 import EditTeamForm from './editTeamForm';
 import { Modal, Checkbox, Button } from 'antd';
-
 import '../../template/style.css';
 
 class Feed extends Component {
     state = {
     visible: false,
-    isEditMode: false,
-    updateObject: {}
+    isEditMode: false
     };
 
     static propTypes = {
@@ -20,7 +18,10 @@ class Feed extends Component {
         list: PropTypes.arrayOf(PropTypes.any),
         item: PropTypes.objectOf(PropTypes.any),
         onDetailsFetch: PropTypes.func,
-        executeUpdate: PropTypes.func
+        executeUpdate: PropTypes.func,
+        onModalChange: PropTypes.func,
+        loading: PropTypes.bool,
+        opened: PropTypes.bool
     };
 
     static defaultProps = {
@@ -29,17 +30,21 @@ class Feed extends Component {
         list: [],
         item: {},
         onDetailsFetch: () => {},
-        executeUpdate: () => {}
+        executeUpdate: () => {},
+        onModalChange: () => {},
+        loading: false,
+        opened: false
     };
 
     displayItemDetails = (id) => {
-        const { onDetailsFetch } = this.props;
-        const { visible } = this.state;
-        this.handleModalDisplay(!visible);
+        const { onDetailsFetch, onModalChange, opened } = this.props;
+        onModalChange(!opened);
         onDetailsFetch(id);
     }
 
     handleModalDisplay = (visible) => {
+        const { onModalChange } = this.props;
+        onModalChange(visible);
         this.setState({ visible });
     }
 
@@ -90,21 +95,21 @@ class Feed extends Component {
     }
 
     render() {
-        const { position, content } = this.props;
-        const { visible, isEditMode } = this.state;
+        const { position, content, loading, opened } = this.props;
+        const { isEditMode } = this.state;
         return(
             <div>
                 <ul className={position}>
                     {this.mapContent(content).list()}
                     <Modal title="Details"
-                      visible={visible}
-                      onCancel={() => this.handleModalDisplay(!visible)}
-                      onOk={() => this.handleModalDisplay(!visible)}
+                      visible={opened}
+                      onCancel={() => this.handleModalDisplay(!opened)}
+                      onOk={() => this.handleModalDisplay(!opened)}
                       footer={[
-                        <Button key="back" onClick={() => this.handleModalDisplay(!visible)}>
+                        <Button key="back" onClick={() => this.handleModalDisplay(!opened)}>
                           Return
                         </Button>,
-                        <Button key="submit" type="primary" disabled={!isEditMode} loading={false}
+                        <Button key="submit" type="primary" disabled={!isEditMode} loading={loading}
                                 onClick={this.handleUpdate}>
                           Submit
                         </Button>

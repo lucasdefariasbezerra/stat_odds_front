@@ -34,10 +34,15 @@ export const changeLoadingState = (loading) => {
     return { type: TeamActionType.CHANGE_LOADING_STATE, payload: loading };
 };
 
+export const changeTriggerState = (notification) => {
+    return { type: TeamActionType.CHANGE_NOTIFICATION_STATE, payload: notification };
+};
+
 export const fetchTeamDetails = (id) => {
     return dispatch => {
         return queryTeamDetails(id).then((data) => {
             dispatch(handleTeamDetails(data));
+            dispatch(changeTriggerState(true));
         });
     };
 };

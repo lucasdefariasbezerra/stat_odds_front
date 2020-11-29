@@ -3,7 +3,8 @@ import * as TeamActionType from '../shared/type';
 const INITIAL_STATE = {
     page: {},
     teamDetails: {},
-    sports: []
+    sports: [],
+    isOpened: false
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -16,6 +17,8 @@ export default (state = INITIAL_STATE, action) => {
             return { ...state, sports: action.payload };
         case TeamActionType.UPDATE_TEAM:
             return { ...state, teamDetails: action.payload };
+        case TeamActionType.CHANGE_MODAL_STATE:
+            return { ...state, isOpened: action.payload };
         default: {
             return state;
         }

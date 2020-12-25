@@ -1,6 +1,7 @@
 const devMode = process.env.NODE_ENV !== 'production';
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const Dotenv = require('dotenv-webpack');
 
 module.exports = {
     mode: devMode ? 'development' : 'production',
@@ -22,7 +23,8 @@ module.exports = {
     plugins: [
         new MiniCssExtractPlugin({
             filename: 'style.css'
-        })
+        }),
+        new Dotenv()
     ],
     module: {
         rules: [{

@@ -1,6 +1,6 @@
 import { request } from 'graphql-request';
 
-const url = 'http://localhost:4000/graphql';
+const url = process.env.API_URL;
 const TEAM_PAGE = `
  query paginatedTeams($pageNum: Int, $pageSize: Int){
    paginatedTeams(pageNum: $pageNum, pageSize: $pageSize) {

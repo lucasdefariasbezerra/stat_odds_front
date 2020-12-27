@@ -56,7 +56,8 @@ class EditTeamForm extends Component {
     }
 
     render() {
-        const { name, sport } = this.props.team;
+        const name = this.props.team.name || '';
+        const sport = this.props.team.sport || {};
         const { sports } = this.props;
         return(
             <div className='edit-container'>
@@ -64,13 +65,12 @@ class EditTeamForm extends Component {
                     <p>team name:</p>
                     <Input size="default" value={name} name="name" onChange={this.onChange} style={{ width: 225 }} />
                 </div>
-                {sport.name && (
                 <div className='form-item'>
                     <p>sport:</p>
-                    <Select value={sport.name} onChange={this.handleChange} style={{ width: 225 }}>
+                    <Select value={sport.name || 'soccer'} onChange={this.handleChange} style={{ width: 225 }}>
                         {this.mapSports(sports)}
                     </Select>
-                </div>)}
+                </div>
             </div>
         );
     }

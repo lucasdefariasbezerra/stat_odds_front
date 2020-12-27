@@ -4,7 +4,8 @@ const INITIAL_STATE = {
     page: {},
     teamDetails: {},
     sports: [],
-    isOpened: false
+    isOpened: false,
+    isNewTeamOpened: false
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -19,6 +20,8 @@ export default (state = INITIAL_STATE, action) => {
             return { ...state, teamDetails: action.payload };
         case TeamActionType.CHANGE_MODAL_STATE:
             return { ...state, isOpened: action.payload };
+        case TeamActionType.CHANGE_NEW_TEAM_MODAL_STATE:
+            return { ...state, isNewTeamOpened: action.payload };
         default: {
             return state;
         }

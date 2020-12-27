@@ -45,6 +45,15 @@ mutation updateTeams($team:teamRequestPayload) {
 }
 `;
 
+const ADD_TEAM = `
+mutation addTeam($team:teamRequestPayload) {
+  addTeam(teamPayload:$team) {
+    status
+    description
+  }
+}
+`;
+
 export const queryTeams = (pageNum, pageSize) => {
     return request(url, TEAM_PAGE, { pageNum, pageSize });
 };
@@ -58,5 +67,11 @@ export const querySports = () => {
 };
 
 export const updateTeams = (team) => {
+  console.log('update team ', team);
   return request(url, UPDATE_TEAM, { team });
+};
+
+export const addTeam = (team) => {
+  console.log('add team ', team);
+  return request(url, ADD_TEAM, { team });
 };

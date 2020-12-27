@@ -3,10 +3,12 @@ import React, { Component } from 'react';
 import '../../template/style.css';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { fetchList, fetchTeamDetails, executeUpdate, changeLoadingState, changeTriggerState } from './teamAction';
+import { fetchList, fetchTeamDetails, executeUpdate, executeInsertion, changeLoadingState, changeTriggerState, openAddTeam } from './teamAction';
 import { changeModalOpenStatus } from '../shared/appStateAction';
 import Feed from './feed';
 import Paginator from '../shared/paginator';
+import ModalManager from '../shared/modalManager';
+import TeamForm from './teamForm';
 import PropTypes from 'prop-types';
 import { notification } from 'antd';
 import * as ActionType from '../shared/type';
@@ -22,12 +24,15 @@ class TeamPage extends Component {
         fetchList: PropTypes.func,
         fetchTeamDetails: PropTypes.func,
         executeUpdate: PropTypes.func,
+        executeInsertion: PropTypes.func,
         changeLoadingState: PropTypes.func,
         appState: PropTypes.objectOf(PropTypes.any),
         triggerNotification: PropTypes.bool,
         changeTriggerState: PropTypes.func,
         changeModalOpenStatus: PropTypes.func,
-        isOpened: PropTypes.bool
+        openAddTeam: PropTypes.func,
+        isOpened: PropTypes.bool,
+        isNewTeamOpened: PropTypes.bool
     };
 
     static defaultProps = {
@@ -36,13 +41,16 @@ class TeamPage extends Component {
         fetchList: () => {},
         fetchTeamDetails: () => {},
         executeUpdate: () => {},
+        executeInsertion: () => {},
         changeLoadingState: () => {},
         loading: false,
         appState: {},
         triggerNotification: false,
         changeTriggerState: () => {},
         changeModalOpenStatus: () => {},
-        isOpened: false
+        openAddTeam: () => {},
+        isOpened: false,
+        isNewTeamOpened: false
     };
 
     componentDidMount() {
@@ -61,10 +69,10 @@ class TeamPage extends Component {
         fetchList((current - 1), pageSize);
     }
 
-    openNotification = type => {
+    openNotification = (type, message, description) => {
         const config = {
-            message: 'Update Message',
-            description: 'Team updated with success',
+            message: message,
+            description: description,
             duration: 3
         };
         notification[type](config);
@@ -75,13 +83,19 @@ class TeamPage extends Component {
         changeModalOpenStatus(ActionType.CHANGE_MODAL_STATE, opened);
     };
 
+    handleNewTeam = (opened) => {
+        const { changeModalOpenStatus, openAddTeam } = this.props;
+        openAddTeam();
+        changeModalOpenStatus(ActionType.CHANGE_NEW_TEAM_MODAL_STATE, opened);
+    };
+
     handleTeamUpdate = () => {
         const { teamDetails, executeUpdate, changeLoadingState, appState } = this.props;
         const { triggerNotification } = appState;
         executeUpdate(teamDetails);
         changeLoadingState(true);
         if (triggerNotification) {
-           this.openNotification('success');
+           this.openNotification('success', 'UPDATE', 'Team successfully updated');
            setTimeout(() => {
             const { changeTriggerState, fetchList, isOpened, changeModalOpenStatus } = this.props;
             const { currentPageNum } = this.state;
@@ -92,8 +106,30 @@ class TeamPage extends Component {
         }
     }
 
+    handleTeamInsertion = () => {
+        const { teamDetails, executeInsertion, changeLoadingState, appState } = this.props;
+        const { triggerNotification } = appState;
+        executeInsertion(teamDetails);
+        changeLoadingState(true);
+        if (triggerNotification) {
+           this.openNotification('success', 'INSERTION', 'Team successfully inserted');
+           setTimeout(() => {
+            const { changeTriggerState, fetchList, isNewTeamOpened, changeModalOpenStatus } = this.props;
+            const { currentPageNum } = this.state;
+            changeModalOpenStatus(ActionType.CHANGE_NEW_TEAM_MODAL_STATE, !isNewTeamOpened);
+            changeTriggerState(false);
+            fetchList(currentPageNum, 7);
+           }, 2000);
+        }
+    }
+
+    handleContentDisplay = () => {
+        const { teamDetails } = this.props;
+        return (<div className='details-text'><TeamForm team={teamDetails}/></div>);
+    }
+
     render() {
-        const { page, teamDetails, appState, isOpened } = this.props;
+        const { page, teamDetails, appState, isOpened, isNewTeamOpened } = this.props;
         const { currentPageNum } = this.state;
         const { isLoading } = appState;
         return (
@@ -107,17 +143,26 @@ class TeamPage extends Component {
                     loading={isLoading}
                     onModalChange={this.handleModalChange}
                     opened={isOpened} />
+                    <ModalManager title="Create a new Team"
+                        opened={isNewTeamOpened}
+                        onModalDisplay={this.handleNewTeam}
+                        loadState={isLoading}
+                        isEditMode={true}
+                        onContentDisplay={this.handleContentDisplay}
+                        onModalAction={this.handleTeamInsertion}/>
                 <Paginator pageNum={currentPageNum}
                            total={page.total}
                            pageEvent={this.hadlePageChange} />
+                <button className="add-button" onClick={() => this.handleNewTeam(!isNewTeamOpened)}>+</button>
             </div>
         );
     }
 }
 
 const mapStateToProps = state => ({ page: state.team.page,
-    teamDetails: state.team.teamDetails, appState: state.appState, isOpened: state.team.isOpened });
+    teamDetails: state.team.teamDetails, appState: state.appState, isOpened: state.team.isOpened,
+    isNewTeamOpened: state.team.isNewTeamOpened });
 
-const mapDispatchToProps = dispatch => bindActionCreators({ fetchList, fetchTeamDetails, executeUpdate, changeLoadingState,
-    changeTriggerState, changeModalOpenStatus }, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators({ fetchList, fetchTeamDetails, executeUpdate, executeInsertion, changeLoadingState,
+    changeTriggerState, changeModalOpenStatus, openAddTeam }, dispatch);
 export default connect(mapStateToProps, mapDispatchToProps)(TeamPage);

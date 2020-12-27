@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import TeamItem from './teamItem';
 import ViewItem from '../shared/viewItem';
-import EditTeamForm from './editTeamForm';
-import { Modal, Checkbox, Button } from 'antd';
+import ModalManager from '../shared/modalManager';
+import TeamForm from './teamForm';
+import { Checkbox } from 'antd';
 import '../../template/style.css';
 
 class Feed extends Component {
     state = {
-    visible: false,
     isEditMode: false
     };
 
@@ -45,7 +45,6 @@ class Feed extends Component {
     handleModalDisplay = (visible) => {
         const { onModalChange } = this.props;
         onModalChange(visible);
-        this.setState({ visible });
     }
 
     handleUpdate = () => {
@@ -66,6 +65,7 @@ class Feed extends Component {
     renderTeamDetails = () => {
       const { item } = this.props;
       const { isEditMode } = this.state;
+
       const fieldList = [
           {
               field: 'Team Name',
@@ -78,7 +78,7 @@ class Feed extends Component {
       ];
       return item.sport && (
          <div className='details-text'>
-            { isEditMode ? (<EditTeamForm team={item}/>) : (<ViewItem fieldList={fieldList}/>) }
+            { isEditMode ? (<TeamForm team={item}/>) : (<ViewItem fieldList={fieldList}/>) }
             <Checkbox onChange={this.onChange}>edit</Checkbox>
         </div>
       );
@@ -101,22 +101,14 @@ class Feed extends Component {
             <div>
                 <ul className={position}>
                     {this.mapContent(content).list()}
-                    <Modal title="Details"
-                      visible={opened}
-                      onCancel={() => this.handleModalDisplay(!opened)}
-                      onOk={() => this.handleModalDisplay(!opened)}
-                      footer={[
-                        <Button key="back" onClick={() => this.handleModalDisplay(!opened)}>
-                          Return
-                        </Button>,
-                        <Button key="submit" type="primary" disabled={!isEditMode} loading={loading}
-                                onClick={this.handleUpdate}>
-                          Submit
-                        </Button>
-                      ]}>
-                          {this.mapContent(content).detail()}
-                      </Modal>
                 </ul>
+                <ModalManager title="Team Details"
+                        opened={opened}
+                        onModalDisplay={this.handleModalDisplay}
+                        loadState={loading}
+                        isEditMode={isEditMode}
+                        onContentDisplay={this.mapContent(content).detail}
+                        onModalAction={this.handleUpdate}/>
             </div>
         );
     }

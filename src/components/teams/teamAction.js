@@ -1,4 +1,4 @@
-import { queryTeams, queryTeamDetails, querySports, updateTeams } from './graphqlRequests';
+import { queryTeams, queryTeamDetails, querySports, updateTeams, addTeam } from './graphqlRequests';
 import * as TeamActionType from '../shared/type';
 
 const handleFetchList = (type, content) => {
@@ -25,9 +25,23 @@ export const fetchList = (pageNum, pageSize) => {
 export const executeUpdate = (team) => {
     return dispatch => {
         return updateTeams(team).then((data) => {
+            console.log('update calback');
+            dispatch(changeLoadingState(false));
+            dispatch(changeTriggerState(true));
+        });
+    };
+};
+
+export const executeInsertion = (team) => {
+    return dispatch => {
+        return addTeam(team).then((data) => {
             dispatch(changeLoadingState(false));
         });
     };
+};
+
+export const openAddTeam = () => {
+    return { type: TeamActionType.TEAM_DETAILS, payload: {name: '', sport: {id: '1', name: 'soccer'}}};
 };
 
 export const changeLoadingState = (loading) => {
@@ -42,7 +56,6 @@ export const fetchTeamDetails = (id) => {
     return dispatch => {
         return queryTeamDetails(id).then((data) => {
             dispatch(handleTeamDetails(data));
-            dispatch(changeTriggerState(true));
         });
     };
 };

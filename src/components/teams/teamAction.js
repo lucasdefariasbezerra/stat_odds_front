@@ -1,4 +1,5 @@
 import { queryTeams, queryTeamDetails, querySports, updateTeams, addTeam } from './graphqlRequests';
+import { changeModalOpenStatus } from '../shared/appStateAction';
 import * as TeamActionType from '../shared/type';
 
 const handleFetchList = (type, content) => {
@@ -7,6 +8,10 @@ const handleFetchList = (type, content) => {
 
 const handleTeamDetails = (data) => {
     return { type: TeamActionType.TEAM_DETAILS, payload: data.team };
+};
+
+const setToasterMessage = (message) => {
+    return { type: TeamActionType.SET_TOASTER_INFO, payload: message };
 };
 
 export const handleUpdate = (currentObject, field, value) => {
@@ -24,18 +29,35 @@ export const fetchList = (pageNum, pageSize) => {
 
 export const executeUpdate = (team) => {
     return dispatch => {
+        dispatch(setToasterMessage({message: 'update was successfully done'}));
         return updateTeams(team).then((data) => {
-            console.log('update calback');
-            dispatch(changeLoadingState(false));
             dispatch(changeTriggerState(true));
+            dispatch(changeLoadingState(false));
+            setTimeout(() => {
+                dispatch(changeModalOpenStatus(TeamActionType.CHANGE_MODAL_STATE, false));
+                dispatch(fetchList(1, 7));
+               }, 2000);
+               setTimeout(() => {
+                dispatch(changeTriggerState(false));
+            }, 7000);
         });
     };
 };
 
 export const executeInsertion = (team) => {
     return dispatch => {
+        dispatch(setToasterMessage({message: 'new team was inserted'}));
         return addTeam(team).then((data) => {
+            dispatch(changeTriggerState(true));
             dispatch(changeLoadingState(false));
+            setTimeout(() => {
+                dispatch(changeModalOpenStatus(TeamActionType.CHANGE_NEW_TEAM_MODAL_STATE, false));
+                dispatch(fetchList(1, 7));
+            }, 2000);
+
+            setTimeout(() => {
+                dispatch(changeTriggerState(false));
+            }, 7000);
         });
     };
 };

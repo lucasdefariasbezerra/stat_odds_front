@@ -7,6 +7,7 @@ import { fetchList, fetchTeamDetails, executeUpdate, executeInsertion, changeLoa
 import { changeModalOpenStatus } from '../shared/appStateAction';
 import Feed from './feed';
 import Paginator from '../shared/paginator';
+import Toaster from '../shared/toaster';
 import ModalManager from '../shared/modalManager';
 import TeamForm from './teamForm';
 import PropTypes from 'prop-types';
@@ -90,37 +91,15 @@ class TeamPage extends Component {
     };
 
     handleTeamUpdate = () => {
-        const { teamDetails, executeUpdate, changeLoadingState, appState } = this.props;
-        const { triggerNotification } = appState;
+        const { teamDetails, executeUpdate, changeLoadingState } = this.props;
         executeUpdate(teamDetails);
         changeLoadingState(true);
-        if (triggerNotification) {
-           this.openNotification('success', 'UPDATE', 'Team successfully updated');
-           setTimeout(() => {
-            const { changeTriggerState, fetchList, isOpened, changeModalOpenStatus } = this.props;
-            const { currentPageNum } = this.state;
-            changeModalOpenStatus(ActionType.CHANGE_MODAL_STATE, !isOpened);
-            changeTriggerState(false);
-            fetchList(currentPageNum, 7);
-           }, 2000);
-        }
     }
 
     handleTeamInsertion = () => {
-        const { teamDetails, executeInsertion, changeLoadingState, appState } = this.props;
-        const { triggerNotification } = appState;
+        const { teamDetails, executeInsertion, changeLoadingState } = this.props;
         executeInsertion(teamDetails);
         changeLoadingState(true);
-        if (triggerNotification) {
-           this.openNotification('success', 'INSERTION', 'Team successfully inserted');
-           setTimeout(() => {
-            const { changeTriggerState, fetchList, isNewTeamOpened, changeModalOpenStatus } = this.props;
-            const { currentPageNum } = this.state;
-            changeModalOpenStatus(ActionType.CHANGE_NEW_TEAM_MODAL_STATE, !isNewTeamOpened);
-            changeTriggerState(false);
-            fetchList(currentPageNum, 7);
-           }, 2000);
-        }
     }
 
     handleContentDisplay = () => {
@@ -131,9 +110,10 @@ class TeamPage extends Component {
     render() {
         const { page, teamDetails, appState, isOpened, isNewTeamOpened } = this.props;
         const { currentPageNum } = this.state;
-        const { isLoading } = appState;
+        const { isLoading, toasterInfo, triggerNotification } = appState;
         return (
             <div>
+                { triggerNotification && (<Toaster message={toasterInfo.message}/>)}
                 <Feed position="center"
                     content="TEAM"
                     list={page.items}
@@ -143,7 +123,7 @@ class TeamPage extends Component {
                     loading={isLoading}
                     onModalChange={this.handleModalChange}
                     opened={isOpened} />
-                    <ModalManager title="Create a new Team"
+                <ModalManager title="Create a new Team"
                         opened={isNewTeamOpened}
                         onModalDisplay={this.handleNewTeam}
                         loadState={isLoading}

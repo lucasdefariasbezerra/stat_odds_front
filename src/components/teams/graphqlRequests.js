@@ -8,13 +8,9 @@ const TEAM_PAGE = `
        items {
         id
         name
-        sport {
-         id
-         name
+      }
     }
-  }
- }
-}`;
+  }`;
 
 const TEAM_DETAILS = `
   query teamDetails($id: ID) {
@@ -25,6 +21,11 @@ const TEAM_DETAILS = `
         id
         name
       }
+      country {
+        id
+        name
+        threeLetterCode
+      }
     }
 }`;
 
@@ -34,6 +35,13 @@ const SPORTS = `
       id
       name
     }
+}`;
+
+const COUNTRIES = `query countries{
+  countries {
+    id
+    name
+  }
 }`;
 
 const UPDATE_TEAM = `
@@ -66,12 +74,14 @@ export const querySports = () => {
   return request(url, SPORTS);
 };
 
+export const queryCountries = () => {
+  return request(url, COUNTRIES);
+};
+
 export const updateTeams = (team) => {
-  console.log('update team ', team);
   return request(url, UPDATE_TEAM, { team });
 };
 
 export const addTeam = (team) => {
-  console.log('add team ', team);
   return request(url, ADD_TEAM, { team });
 };

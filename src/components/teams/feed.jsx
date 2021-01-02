@@ -65,7 +65,7 @@ class Feed extends Component {
     renderTeamDetails = () => {
       const { item } = this.props;
       const { isEditMode } = this.state;
-
+      console.log('item, ', item);
       const fieldList = [
           {
               field: 'Team Name',
@@ -74,6 +74,10 @@ class Feed extends Component {
           {
             field: 'Sport',
             value: item.sport && item.sport.name
+          },
+          {
+              field: 'Country',
+              value: item.country && `${item.country.name} - ${item.country.threeLetterCode}`
           }
       ];
       return item.sport && (

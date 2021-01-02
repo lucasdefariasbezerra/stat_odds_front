@@ -4,7 +4,7 @@ import '../../template/style.css';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { fetchList, fetchTeamDetails, executeUpdate, executeInsertion, changeLoadingState, changeTriggerState, openAddTeam } from './teamAction';
-import { changeModalOpenStatus } from '../shared/appStateAction';
+import { changeModalOpenStatus, changePageNum } from '../shared/appStateAction';
 import Feed from './feed';
 import Paginator from '../shared/paginator';
 import Toaster from '../shared/toaster';
@@ -15,9 +15,6 @@ import { notification } from 'antd';
 import * as ActionType from '../shared/type';
 
 class TeamPage extends Component {
-    state = {
-        currentPageNum: 0
-    }
 
     static propTypes = {
         page: PropTypes.objectOf(PropTypes.any),
@@ -31,6 +28,7 @@ class TeamPage extends Component {
         triggerNotification: PropTypes.bool,
         changeTriggerState: PropTypes.func,
         changeModalOpenStatus: PropTypes.func,
+        changePageNum: PropTypes.func,
         openAddTeam: PropTypes.func,
         isOpened: PropTypes.bool,
         isNewTeamOpened: PropTypes.bool
@@ -49,6 +47,7 @@ class TeamPage extends Component {
         triggerNotification: false,
         changeTriggerState: () => {},
         changeModalOpenStatus: () => {},
+        changePageNum: () => {},
         openAddTeam: () => {},
         isOpened: false,
         isNewTeamOpened: false
@@ -65,8 +64,8 @@ class TeamPage extends Component {
     }
 
     hadlePageChange = (current, pageSize) => {
-        const { fetchList } = this.props;
-        this.setState({currentPageNum: (current - 1)});
+        const { fetchList, changePageNum } = this.props;
+        changePageNum(current - 1);
         fetchList((current - 1), pageSize);
     }
 
@@ -91,14 +90,16 @@ class TeamPage extends Component {
     };
 
     handleTeamUpdate = () => {
-        const { teamDetails, executeUpdate, changeLoadingState } = this.props;
-        executeUpdate(teamDetails);
+        const { teamDetails, executeUpdate, changeLoadingState, appState } = this.props;
+        const { currentPageNum } = appState;
+        executeUpdate(teamDetails, currentPageNum);
         changeLoadingState(true);
     }
 
     handleTeamInsertion = () => {
-        const { teamDetails, executeInsertion, changeLoadingState } = this.props;
-        executeInsertion(teamDetails);
+        const { teamDetails, executeInsertion, changeLoadingState, appState } = this.props;
+        const { currentPageNum } = appState;
+        executeInsertion(teamDetails, currentPageNum);
         changeLoadingState(true);
     }
 
@@ -109,11 +110,11 @@ class TeamPage extends Component {
 
     render() {
         const { page, teamDetails, appState, isOpened, isNewTeamOpened } = this.props;
-        const { currentPageNum } = this.state;
         const { isLoading, toasterInfo, triggerNotification } = appState;
+        const { currentPageNum } = appState;
         return (
             <div>
-                { triggerNotification && (<Toaster message={toasterInfo.message}/>)}
+                { triggerNotification && (<Toaster message={toasterInfo.message} type={toasterInfo.type}/>)}
                 <Feed position="center"
                     content="TEAM"
                     list={page.items}
@@ -143,6 +144,7 @@ const mapStateToProps = state => ({ page: state.team.page,
     teamDetails: state.team.teamDetails, appState: state.appState, isOpened: state.team.isOpened,
     isNewTeamOpened: state.team.isNewTeamOpened });
 
-const mapDispatchToProps = dispatch => bindActionCreators({ fetchList, fetchTeamDetails, executeUpdate, executeInsertion, changeLoadingState,
-    changeTriggerState, changeModalOpenStatus, openAddTeam }, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators({
+    fetchList, fetchTeamDetails, executeUpdate, executeInsertion, changeLoadingState,
+    changeTriggerState, changeModalOpenStatus, openAddTeam, changePageNum }, dispatch);
 export default connect(mapStateToProps, mapDispatchToProps)(TeamPage);

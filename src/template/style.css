@@ -99,7 +99,7 @@ div.details-text > p {
     z-index: 1000;
 }
 
-.custom-toaster {
+.success {
     display: flex;
     box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.473);
     position: fixed;
@@ -112,6 +112,21 @@ div.details-text > p {
     right: 50px;    
     border-top: solid #52c41a;
     background-color: #def7d2;
+}
+
+.error {
+    display: flex;
+    box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.473);
+    position: fixed;
+    padding: 12px;
+    align-items: center;
+    font-size: medium;
+    width: 250px;
+    font-size: 14px;
+    top: 10px;
+    right: 50px;    
+    border-top: solid #ff3333;
+    background-color: #ffcccc;
 }
 
 .toaster-text {

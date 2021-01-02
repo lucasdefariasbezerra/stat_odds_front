@@ -7,4 +7,4 @@ COPY ./package.json /usr/app
 RUN  cd /usr/app && yarn install
 COPY ./ /usr/app
 
-CMD ["yarn", "--cwd","/app","start"]
+CMD ["yarn", "--cwd","/usr/app","start"]

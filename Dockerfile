@@ -1,7 +1,10 @@
 FROM node:12.18.2
-COPY . /app
+
+WORKDIR /usr/app
 
 EXPOSE 3000
-RUN cd /app/ && yarn install
+COPY ./package.json /usr/app
+RUN  cd /usr/app && yarn install
+COPY ./ /usr/app
 
 CMD ["yarn", "--cwd","/app","start"]

@@ -29,7 +29,6 @@ class ModalManager extends Component {
 
     render() {
         const { title, opened, onModalDisplay, onContentDisplay, isEditMode, loadState, onModalAction } = this.props;
-        console.log('isEditMode', isEditMode);
         return(
             <Modal title={title}
                 visible={opened}

@@ -78,43 +78,42 @@ class Pictures extends Component {
     const variables = { input: listInput };
     console.log('variables ', variables);
     request(endpoint, mutation, variables)
-    .then(data => {
-      const { sendPicture } = data;
-      const { statusCode } = sendPicture;
-      if (statusCode === 200) {
-        this.setState({ uploading: false, disabled: true });
-        message.success('ok');
-      }
-      console.log('sendPicture ', sendPicture);
-    });
+      .then(data => {
+        const { sendPicture } = data;
+        const { statusCode } = sendPicture;
+        if (statusCode === 200) {
+          this.setState({ uploading: false, disabled: true });
+          message.success('ok');
+        }
+        console.log('sendPicture ', sendPicture);
+      });
   }
 
   render() {
-      const { fileList, uploading, disabled } = this.state;
-      console.log('fileList ', fileList, 'upload ', uploading);
-      return(
-            <div className='uploadContainer'>
-              <Upload
-                beforeUpload={this.handleBefore}
-                onRemove={this.handleRemove}
-                listType='picture'
-                defaultFileList={fileList}>
-                <Button className='showButton'>
-                   <Icon type="upload" /> Load Image
+    const { fileList, uploading, disabled } = this.state;
+    console.log('fileList ', fileList, 'upload ', uploading);
+    return (
+      <div className='uploadContainer'>
+        <Upload
+          beforeUpload={this.handleBefore}
+          onRemove={this.handleRemove}
+          listType='picture'
+          defaultFileList={fileList}>
+          <Button className='showButton'>
+            <Icon type="upload" /> Load Image
                 </Button>
-              </Upload>
-              <Button
-                type="primary"
-                onClick={this.handleUpload}
-                disabled={disabled}
-                loading={uploading}
-                style={{ marginTop: 16 }}
-              >
-                  {uploading ? 'Uploading' : 'Start Upload' }
-              </Button>
-            </div>
-        );
-    }
+        </Upload>
+        <Button
+          type="primary"
+          onClick={this.handleUpload}
+          disabled={disabled}
+          loading={uploading}
+          style={{ marginTop: 16 }}>
+          {uploading ? 'Uploading' : 'Start Upload'}
+        </Button>
+      </div>
+    );
+  }
 }
 
 export default Pictures;

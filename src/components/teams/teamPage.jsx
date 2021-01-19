@@ -9,6 +9,7 @@ import Feed from './feed';
 import Paginator from '../shared/paginator';
 import Toaster from '../shared/toaster';
 import ModalManager from '../shared/modalManager';
+import NavBar from '../shared/navbar/navBar';
 import TeamForm from './teamForm';
 import PropTypes from 'prop-types';
 import { notification } from 'antd';
@@ -115,6 +116,7 @@ class TeamPage extends Component {
         return (
             <div>
                 { triggerNotification && (<Toaster message={toasterInfo.message} type={toasterInfo.type}/>)}
+                <NavBar />
                 <Feed position="center"
                     content="TEAM"
                     list={page.items}

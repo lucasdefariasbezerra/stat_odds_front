@@ -10,7 +10,7 @@ const handleTeamDetails = (data) => {
     return { type: TeamActionType.TEAM_DETAILS, payload: data.team };
 };
 
-const setToasterMessage = (toasterObj) => {
+export const setToasterMessage = (toasterObj) => {
     return { type: TeamActionType.SET_TOASTER_INFO, payload: toasterObj };
 };
 

@@ -2,42 +2,22 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import '../../../template/style.css';
 
-const STYLES = [
-    'btn--primary',
-    'btn--outline'
-];
-
-const SIZES = [
- 'btn--medium',
- 'btn--large'
-];
-
 const NavBarButton = (props) => {
-    const { buttonStyle, buttonSize, children, onClick, type } = props;
-    const checkButtonStyle = STYLES.includes(buttonStyle) ? buttonStyle: STYLES[0];
-    const checkButtonSizes = STYLES.includes(buttonSize) ? buttonStyle: SIZES[0];
+    const { onClick } = props;
 
     return(
-      <button className={`btn ${checkButtonStyle} ${checkButtonSizes}`} onClick={onClick} type={type}>
-        {children}
-      </button>
+      <div className="operation_menu" onClick={onClick()}>
+        <i className="fas fa-bars"></i>
+      </div>
       );
 };
 
 NavBarButton.propTypes = {
-    children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]).isRequired,
-    type: PropTypes.string,
-    onClick: PropTypes.func,
-    buttonStyle: PropTypes.string,
-    buttonSize: PropTypes.string
+    onClick: PropTypes.func
 };
 
 NavBarButton.defaultProps = {
-    children: undefined,
-    type: '',
-    onClick: '',
-    buttonStyle: '',
-    buttonSize: ''
+    onClick: () => {}
 };
 
 export default NavBarButton;

@@ -10,6 +10,19 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import '../../template/style.css';
 
+const links = [
+  {
+      title: 'file upload',
+      url: '/team_upload',
+      cName: 'nav-links'
+  },
+  {
+      title: 'team management',
+      url: '/',
+      cName: 'nav-links'
+  }
+];
+
 class FileUploadPage extends Component {
     state = {
         fileList: [],
@@ -65,7 +78,7 @@ class FileUploadPage extends Component {
         const { triggerNotification, toasterInfo } = appState;
         return (
             <div>
-                <NavBar />
+                <NavBar links={links}/>
                 { triggerNotification && (<Toaster message={toasterInfo.message} type={toasterInfo.type}/>)}
                 <div className='uploadContainer'>
                     <Upload

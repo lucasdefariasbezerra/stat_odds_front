@@ -15,6 +15,19 @@ import PropTypes from 'prop-types';
 import { notification } from 'antd';
 import * as ActionType from '../shared/type';
 
+const links = [
+    {
+        title: 'file upload',
+        url: '/team_upload',
+        cName: 'nav-links'
+    },
+    {
+        title: 'team management',
+        url: '/',
+        cName: 'nav-links'
+    }
+];
+
 class TeamPage extends Component {
 
     static propTypes = {
@@ -113,10 +126,11 @@ class TeamPage extends Component {
         const { page, teamDetails, appState, isOpened, isNewTeamOpened } = this.props;
         const { isLoading, toasterInfo, triggerNotification } = appState;
         const { currentPageNum } = appState;
+        console.log('links ', links);
         return (
             <div>
                 { triggerNotification && (<Toaster message={toasterInfo.message} type={toasterInfo.type}/>)}
-                <NavBar />
+                <NavBar links={links}/>
                 <Feed position="center"
                     content="TEAM"
                     list={page.items}

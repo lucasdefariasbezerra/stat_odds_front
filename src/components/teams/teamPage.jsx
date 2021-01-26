@@ -22,8 +22,8 @@ const links = [
         cName: 'nav-links'
     },
     {
-        title: 'team management',
-        url: '/',
+        title: 'seasons',
+        url: '/seasons',
         cName: 'nav-links'
     }
 ];

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import TeamItem from './teamItem';
+import SeasonItem from '../seasons/seasonItem';
 import ViewItem from '../shared/viewItem';
 import ModalManager from '../shared/modalManager';
 import TeamForm from './teamForm';
@@ -52,6 +53,11 @@ class Feed extends Component {
         executeUpdate();
     }
 
+    mapSeasons = () => {
+        const { list } = this.props;
+        return list.map((item) => (<SeasonItem key={item.id} season={item} />));
+    }
+
     mapTeams = () => {
         const { list } = this.props;
         return list.map((item) => (<TeamItem key={item.id} team={item} displayItemDetails={this.displayItemDetails} />));
@@ -93,6 +99,9 @@ class Feed extends Component {
             TEAM: {
                 list: () => this.mapTeams(),
                 detail: () => this.renderTeamDetails()
+            },
+            SEASON: {
+                list: () => this.mapSeasons()
             }
         };
         return entities[content];
@@ -111,7 +120,7 @@ class Feed extends Component {
                         onModalDisplay={this.handleModalDisplay}
                         loadState={loading}
                         isEditMode={isEditMode}
-                        onContentDisplay={this.mapContent(content).detail}
+                        onContentDisplay={this.mapContent(content) && this.mapContent(content).detail}
                         onModalAction={this.handleUpdate}/>
             </div>
         );

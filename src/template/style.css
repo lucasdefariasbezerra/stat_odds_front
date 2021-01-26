@@ -58,6 +58,10 @@ li.list-style > img {
 li.list-style > span {
     margin-left: 10px;
 }
+
+li.list-style > div {
+    margin-left: 10px;
+}
  
 .text {
   font-size: 18px;
@@ -65,6 +69,25 @@ li.list-style > span {
   max-width: 72%;
   flex: 2;
   font-family: 'Quicksand', sans-serif;
+}
+
+.season-text {
+    width: 72%;
+    max-width: 72%;
+    flex: 2;
+    font-family: 'Quicksand', sans-serif;
+}
+
+.season-text > h1 {
+    font-size: 19px;
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+
+.season-text > p {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 2px;
 }
 
 .details-text {

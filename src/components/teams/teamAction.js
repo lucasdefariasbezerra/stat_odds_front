@@ -1,10 +1,6 @@
 import { queryTeams, queryTeamDetails, querySports, queryCountries, updateTeams, addTeam } from './graphqlRequests';
-import { changeModalOpenStatus } from '../shared/appStateAction';
+import { changeModalOpenStatus, changeTriggerState, handleFetchList } from '../shared/appStateAction';
 import * as TeamActionType from '../shared/type';
-
-const handleFetchList = (type, content) => {
-    return { type, payload: content };
-};
 
 const handleTeamDetails = (data) => {
     return { type: TeamActionType.TEAM_DETAILS, payload: data.team };
@@ -18,6 +14,7 @@ export const handleUpdate = (currentObject, field, value) => {
    const newObject = { ...currentObject, [field]: value};
    return { type: TeamActionType.UPDATE_TEAM, payload: newObject };
 };
+
 
 export const fetchList = (pageNum, pageSize) => {
     return dispatch => {
@@ -76,10 +73,6 @@ export const openAddTeam = () => {
 
 export const changeLoadingState = (loading) => {
     return { type: TeamActionType.CHANGE_LOADING_STATE, payload: loading };
-};
-
-export const changeTriggerState = (notification) => {
-    return { type: TeamActionType.CHANGE_NOTIFICATION_STATE, payload: notification };
 };
 
 export const fetchTeamDetails = (id) => {

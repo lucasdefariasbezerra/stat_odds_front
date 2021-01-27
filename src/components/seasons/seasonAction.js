@@ -1,10 +1,6 @@
 import { querySeasons, queryTournments, addSeason } from './graphqlRequests';
-import { changeModalOpenStatus } from '../shared/appStateAction';
+import { changeModalOpenStatus, handleFetchList, changeLoadingState, setToasterMessage, changeTriggerState } from '../shared/appStateAction';
 import * as SeasonActionType from '../shared/type';
-
-const handleFetchList = (type, content) => {
-    return { type, payload: content };
-};
 
 export const fetchList = (pageNum, pageSize) => {
     return dispatch => {
@@ -46,7 +42,6 @@ export const handleUpdate = (currentObject, field, value) => {
                 dispatch(changeTriggerState(false));
             }, 7000);
         }).catch((err) => {
-            console.error('err ', err);
             dispatch(setToasterMessage({message: err.response.errors[0].message, type: 'error'}));
             dispatch(changeLoadingState(false));
             dispatch(changeTriggerState(true));
@@ -56,16 +51,4 @@ export const handleUpdate = (currentObject, field, value) => {
             }, 7000);
         });
     };
-};
-
-export const changeTriggerState = (notification) => {
-    return { type: SeasonActionType.CHANGE_NOTIFICATION_STATE, payload: notification };
-};
-
-export const setToasterMessage = (toasterObj) => {
-    return { type: SeasonActionType.SET_TOASTER_INFO, payload: toasterObj };
-};
-
-export const changeLoadingState = (loading) => {
-    return { type: SeasonActionType.CHANGE_LOADING_STATE, payload: loading };
 };

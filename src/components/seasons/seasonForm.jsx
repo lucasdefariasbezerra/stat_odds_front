@@ -76,7 +76,7 @@ class SeasonForm extends Component {
         const type = this.props.season.type || '';
         const seasonStart = this.props.season.seasonStart;
         const seasonEnd = this.props.season.seasonEnd;
-        const tournmentName = this.props.season.tournmentName;
+        const tournment = this.props.season.tournment;
         const { tournments } = this.props;
 
         return(
@@ -113,7 +113,7 @@ class SeasonForm extends Component {
 
                 <div className='form-item'>
                     <p>tournments:</p>
-                    <Select value={tournmentName || 'English Premier League'} onChange={this.handleTournmentChange} style={{ width: 225 }}>
+                    <Select value={(tournment && tournment.name) || 'English Premier League'} onChange={this.handleTournmentChange} style={{ width: 225 }}>
                         {this.mapList('tournmentMap', tournments)}
                     </Select>
                 </div>

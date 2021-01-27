@@ -22,6 +22,13 @@ const SEASON_PAGE = `
     }
   }`;
 
+const ADD_SEASON = `
+  mutation addSeason($season:seasonRequestPayload) {
+    addSeason(seasonPayload:$season) {
+      status
+      description
+    }
+}`;
 
 export const querySeasons = (pageNum, pageSize) => {
     return request(url, SEASON_PAGE, { pageNum, pageSize });
@@ -29,5 +36,9 @@ export const querySeasons = (pageNum, pageSize) => {
 
 export const queryTournments = () => {
   return request(url, TOURNMENTS);
-}
+};
+
+export const addSeason = (season) => {
+  return request(url, ADD_SEASON, { season });
+};
 

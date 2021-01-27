@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import '../../template/style.css';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { fetchList } from './seasonAction';
+import { fetchList, executeInsertion, changeLoadingState } from './seasonAction';
 import { changeModalOpenStatus, changePageNum } from '../shared/appStateAction';
 import Feed from '../teams/feed';
 import Paginator from '../shared/paginator';
@@ -36,6 +36,8 @@ class SeasonPage extends Component {
         seasonDetails: PropTypes.objectOf(PropTypes.any),
         fetchList: PropTypes.func,
         changePageNum: PropTypes.func,
+        changeLoadingState: PropTypes.func,
+        executeInsertion: PropTypes.func,
         changeModalOpenStatus: PropTypes.func,
         isNewSeasonOpened: PropTypes.bool
     };
@@ -46,6 +48,8 @@ class SeasonPage extends Component {
         seasonDetails: {},
         fetchList: () => {},
         changePageNum: () => {},
+        changeLoadingState: () => {},
+        executeInsertion: () => {},
         changeModalOpenStatus: () => {},
         isNewSeasonOpened: false
     };
@@ -64,9 +68,6 @@ class SeasonPage extends Component {
         fetchList((current -1), pageSize);
     }
 
-    openNotification = (type, message, description) => {
-    }
-
     handleModalChange = (opened) => {
     };
 
@@ -75,7 +76,11 @@ class SeasonPage extends Component {
         changeModalOpenStatus(ActionType.CHANGE_NEW_SEASON_MODAL_STATE, opened);
     };
 
-    handleTeamInsertion = () => {
+    handleSeasonInsertion = () => {
+        const { seasonDetails, executeInsertion, changeLoadingState, appState } = this.props;
+        const { currentPageNum } = appState;
+        executeInsertion(seasonDetails, currentPageNum);
+        changeLoadingState(true);
     }
 
     handleContentDisplay = () => {
@@ -85,10 +90,10 @@ class SeasonPage extends Component {
 
     render() {
         const { page, appState, isNewSeasonOpened } = this.props;
-        const { currentPageNum, isLoading } = appState;
+        const { currentPageNum, isLoading, triggerNotification, toasterInfo } = appState;
         return (
             <div>
-               {/* { triggerNotification && (<Toaster message={toasterInfo.message} type={toasterInfo.type}/>)} */}
+                { triggerNotification && (<Toaster message={toasterInfo.message} type={toasterInfo.type}/>) }
                 <NavBar links={links}/>
                 <Feed position="center"
                     content="SEASON"
@@ -99,7 +104,8 @@ class SeasonPage extends Component {
                     loadState={isLoading}
                     isEditMode={true}
                     onContentDisplay={this.handleContentDisplay}
-                    onModalAction={this.handleTeamInsertion}/>
+                    onModalAction={this.handleSeasonInsertion}
+                    />
                 <Paginator pageNum={currentPageNum}
                            total={page.total}
                            pageEvent={this.hadlePageChange} />
@@ -112,5 +118,6 @@ class SeasonPage extends Component {
 const mapStateToProps = state => ({ page: state.season.page, appState: state.appState, isNewSeasonOpened: state.season.isNewSeasonOpened,
     seasonDetails: state.season.seasonDetails });
 
-const mapDispatchToProps = dispatch => bindActionCreators({ fetchList, changePageNum, changeModalOpenStatus }, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators({ fetchList, changePageNum,
+    changeModalOpenStatus, executeInsertion, changeLoadingState }, dispatch);
 export default connect(mapStateToProps, mapDispatchToProps)(SeasonPage);

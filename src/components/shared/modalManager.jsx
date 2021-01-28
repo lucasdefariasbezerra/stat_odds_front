@@ -11,6 +11,7 @@ class ModalManager extends Component {
         opened: PropTypes.bool,
         onModalDisplay: PropTypes.func,
         loadState: PropTypes.bool,
+        isActionEnabled: PropTypes.bool,
         isEditMode: PropTypes.bool,
         onContentDisplay: PropTypes.func,
         onModalAction: PropTypes.func
@@ -21,14 +22,14 @@ class ModalManager extends Component {
         opened: false,
         onModalDisplay: () => {},
         loadState: false,
-        isEditMode: false,
+        isActionEnabled: true,
         onContentDisplay: () => {},
         onModalAction: () => {}
     };
 
 
     render() {
-        const { title, opened, onModalDisplay, onContentDisplay, isEditMode, loadState, onModalAction } = this.props;
+        const { title, opened, onModalDisplay, onContentDisplay, isActionEnabled, loadState, onModalAction } = this.props;
         return(
             <Modal title={title}
                 visible={opened}
@@ -36,7 +37,7 @@ class ModalManager extends Component {
                 onOk={() => onModalDisplay(!opened)}
                 footer={[
                 <Button key="back" onClick={() => onModalDisplay(!opened)}>Return</Button>,
-                <Button key="submit" type="primary" disabled={!isEditMode} loading={loadState} onClick={() => onModalAction()}>Submit</Button>]}>
+                <Button key="submit" type="primary" disabled={!isActionEnabled} loading={loadState} onClick={() => onModalAction()}>Submit</Button>]}>
                     {onContentDisplay()}
             </Modal>
         );

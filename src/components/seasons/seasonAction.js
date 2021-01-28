@@ -35,7 +35,7 @@ export const handleUpdate = (currentObject, field, value) => {
             setTimeout(() => {
                 dispatch(handleUpdate());
                 dispatch(changeModalOpenStatus(SeasonActionType.CHANGE_NEW_SEASON_MODAL_STATE, false));
-                dispatch(fetchList(pageNum, 7));
+                dispatch(fetchList(pageNum, 5));
             }, 2000);
 
             setTimeout(() => {

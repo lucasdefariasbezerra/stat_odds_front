@@ -11,8 +11,10 @@ import Toaster from '../shared/toaster';
 import ModalManager from '../shared/modalManager';
 import NavBar from '../shared/navbar/navBar';
 import TeamForm from './teamForm';
+import TeamItem from './teamItem';
+import ViewItem from '../shared/viewItem';
 import PropTypes from 'prop-types';
-import { notification } from 'antd';
+import { Checkbox } from 'antd';
 import * as ActionType from '../shared/type';
 
 const links = [
@@ -29,6 +31,9 @@ const links = [
 ];
 
 class TeamPage extends Component {
+    state = {
+        isEditMode: false
+    };
 
     static propTypes = {
         page: PropTypes.objectOf(PropTypes.any),
@@ -66,11 +71,6 @@ class TeamPage extends Component {
         isOpened: false,
         isNewTeamOpened: false
     };
-
-    componentDidMount() {
-        const { fetchList } = this.props;
-        fetchList(0, 7);
-    }
 
     handleDetailsFetch = (id) => {
         const { fetchTeamDetails } = this.props;
@@ -122,11 +122,60 @@ class TeamPage extends Component {
         return (<div className='details-text'><TeamForm team={teamDetails}/></div>);
     }
 
+    displayItemDetails = (id) => {
+        const { isOpened } = this.props;
+        this.handleModalChange(!isOpened);
+        this.handleDetailsFetch(id);
+    }
+
+    mapTeams = () => {
+        const { page } = this.props;
+        const { items } = page;
+        if (items)
+            return items.map((item) => (<TeamItem key={item.id} team={item} displayItemDetails={this.displayItemDetails} />));
+    }
+
+    onChange = (e) => {
+        const { checked } = e.target;
+        this.setState({ isEditMode: checked });
+    }
+
+    renderTeamDetails = () => {
+        const { teamDetails } = this.props;
+        const { isEditMode } = this.state;
+        const fieldList = [
+            {
+                field: 'Team Name',
+                value: teamDetails.name
+            },
+            {
+              field: 'Sport',
+              value: teamDetails.sport && teamDetails.sport.name
+            },
+            {
+                field: 'Country',
+                value: teamDetails.country && `${teamDetails.country.name} - ${teamDetails.country.threeLetterCode}`
+            }
+        ];
+        return teamDetails.sport && (
+           <div className='details-text'>
+              { isEditMode ? (<TeamForm team={teamDetails}/>) : (<ViewItem fieldList={fieldList}/>) }
+              <Checkbox onChange={this.onChange}>edit</Checkbox>
+          </div>
+        );
+      }
+
+    componentDidMount() {
+        const { fetchList } = this.props;
+        fetchList(0, 7);
+    }
+
     render() {
         const { page, teamDetails, appState, isOpened, isNewTeamOpened } = this.props;
         const { isLoading, toasterInfo, triggerNotification } = appState;
         const { currentPageNum } = appState;
-        console.log('links ', links);
+        const { isEditMode } = this.state;
+
         return (
             <div>
                 { triggerNotification && (<Toaster message={toasterInfo.message} type={toasterInfo.type}/>)}
@@ -135,16 +184,19 @@ class TeamPage extends Component {
                     content="TEAM"
                     list={page.items}
                     item={teamDetails}
+                    isEditMode={isEditMode}
                     onDetailsFetch={this.handleDetailsFetch}
+                    onItemsRender={this.mapTeams}
                     executeUpdate={this.handleTeamUpdate}
                     loading={isLoading}
+                    onDetailsRender={this.renderTeamDetails}
                     onModalChange={this.handleModalChange}
                     opened={isOpened} />
                 <ModalManager title="Create a new Team"
                         opened={isNewTeamOpened}
                         onModalDisplay={this.handleNewTeam}
                         loadState={isLoading}
-                        isEditMode={true}
+                        isActionButttonsEnabled={true}
                         onContentDisplay={this.handleContentDisplay}
                         onModalAction={this.handleTeamInsertion}/>
                 <Paginator pageNum={currentPageNum}

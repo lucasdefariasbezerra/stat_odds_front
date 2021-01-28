@@ -1,24 +1,18 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import TeamItem from './teamItem';
-import SeasonItem from '../seasons/seasonItem';
-import ViewItem from '../shared/viewItem';
 import ModalManager from '../shared/modalManager';
-import TeamForm from './teamForm';
-import { Checkbox } from 'antd';
 import '../../template/style.css';
 
 class Feed extends Component {
-    state = {
-    isEditMode: false
-    };
 
     static propTypes = {
         position: PropTypes.string,
         content: PropTypes.string,
-        list: PropTypes.arrayOf(PropTypes.any),
         item: PropTypes.objectOf(PropTypes.any),
+        isEditMode: PropTypes.bool,
         onDetailsFetch: PropTypes.func,
+        onDetailsRender: PropTypes.func,
+        onItemsRender: PropTypes.func,
         executeUpdate: PropTypes.func,
         onModalChange: PropTypes.func,
         loading: PropTypes.bool,
@@ -30,18 +24,15 @@ class Feed extends Component {
         content: "",
         list: [],
         item: {},
+        isEditMode: false,
+        onItemsRender: () => {},
+        onDetailsRender: () => {},
         onDetailsFetch: () => {},
         executeUpdate: () => {},
         onModalChange: () => {},
         loading: false,
         opened: false
     };
-
-    displayItemDetails = (id) => {
-        const { onDetailsFetch, onModalChange, opened } = this.props;
-        onModalChange(!opened);
-        onDetailsFetch(id);
-    }
 
     handleModalDisplay = (visible) => {
         const { onModalChange } = this.props;
@@ -53,74 +44,19 @@ class Feed extends Component {
         executeUpdate();
     }
 
-    mapSeasons = () => {
-        const { list } = this.props;
-        return list.map((item) => (<SeasonItem key={item.id} season={item} />));
-    }
-
-    mapTeams = () => {
-        const { list } = this.props;
-        return list.map((item) => (<TeamItem key={item.id} team={item} displayItemDetails={this.displayItemDetails} />));
-    }
-
-    onChange = (e) => {
-        const { checked } = e.target;
-        this.setState({ isEditMode: checked });
-    }
-
-    renderTeamDetails = () => {
-      const { item } = this.props;
-      const { isEditMode } = this.state;
-      console.log('item, ', item);
-      const fieldList = [
-          {
-              field: 'Team Name',
-              value: item.name
-          },
-          {
-            field: 'Sport',
-            value: item.sport && item.sport.name
-          },
-          {
-              field: 'Country',
-              value: item.country && `${item.country.name} - ${item.country.threeLetterCode}`
-          }
-      ];
-      return item.sport && (
-         <div className='details-text'>
-            { isEditMode ? (<TeamForm team={item}/>) : (<ViewItem fieldList={fieldList}/>) }
-            <Checkbox onChange={this.onChange}>edit</Checkbox>
-        </div>
-      );
-    }
-
-    mapContent = (content) => {
-        const entities = {
-            TEAM: {
-                list: () => this.mapTeams(),
-                detail: () => this.renderTeamDetails()
-            },
-            SEASON: {
-                list: () => this.mapSeasons()
-            }
-        };
-        return entities[content];
-    }
-
     render() {
-        const { position, content, loading, opened } = this.props;
-        const { isEditMode } = this.state;
+        const { position, isEditMode, loading, opened, onItemsRender, onDetailsRender } = this.props;
         return(
             <div>
                 <ul className={position}>
-                    {this.mapContent(content).list()}
+                    {onItemsRender()}
                 </ul>
                 <ModalManager title="Team Details"
                         opened={opened}
                         onModalDisplay={this.handleModalDisplay}
                         loadState={loading}
-                        isEditMode={isEditMode}
-                        onContentDisplay={this.mapContent(content) && this.mapContent(content).detail}
+                        isActionButttonsEnabled={isEditMode}
+                        onContentDisplay={onDetailsRender}
                         onModalAction={this.handleUpdate}/>
             </div>
         );

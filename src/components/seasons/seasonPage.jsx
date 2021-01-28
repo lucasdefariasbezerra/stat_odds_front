@@ -7,12 +7,12 @@ import { fetchList, executeInsertion } from './seasonAction';
 import { changeModalOpenStatus, changePageNum, changeLoadingState } from '../shared/appStateAction';
 import Feed from '../teams/feed';
 import Paginator from '../shared/paginator';
+import SeasonItem from './seasonItem';
 import SeasonFrom from '../seasons/seasonForm';
 import Toaster from '../shared/toaster';
 import ModalManager from '../shared/modalManager';
 import NavBar from '../shared/navbar/navBar';
 import PropTypes from 'prop-types';
-import { notification } from 'antd';
 import * as ActionType from '../shared/type';
 
 const links = [
@@ -54,11 +54,6 @@ class SeasonPage extends Component {
         isNewSeasonOpened: false
     };
 
-    componentDidMount() {
-        const { fetchList } = this.props;
-        fetchList(0, 5);
-    }
-
     handleDetailsFetch = (id) => {
     }
 
@@ -88,6 +83,19 @@ class SeasonPage extends Component {
         return (<div className='details-text'><SeasonFrom season={seasonDetails}/></div>);
     }
 
+    mapSeasons = () => {
+        console.log('here');
+        const { page } = this.props;
+        const { items } = page;
+        if (items)
+            return items.map((item) => (<SeasonItem key={item.id} season={item} />));
+    }
+
+    componentDidMount() {
+        const { fetchList } = this.props;
+        fetchList(0, 5);
+    }
+
     render() {
         const { page, appState, isNewSeasonOpened } = this.props;
         const { currentPageNum, isLoading, triggerNotification, toasterInfo } = appState;
@@ -97,18 +105,20 @@ class SeasonPage extends Component {
                 <NavBar links={links}/>
                 <Feed position="center"
                     content="SEASON"
-                    list={page.items} />
+                    onItemsRender={this.mapSeasons}
+                    />
                 <ModalManager title="Create a new Tournment Season"
                     opened={isNewSeasonOpened}
                     onModalDisplay={this.handleNewSeason}
                     loadState={isLoading}
-                    isEditMode={true}
+                    isActionButttonsEnabled={true}
                     onContentDisplay={this.handleContentDisplay}
                     onModalAction={this.handleSeasonInsertion}
                     />
                 <Paginator pageNum={currentPageNum}
                            total={page.total}
-                           pageEvent={this.hadlePageChange} />
+                           pageEvent={this.hadlePageChange}
+                           pageSize={5} />
                 <button className="add-button" onClick={() => this.handleNewSeason(!isNewSeasonOpened)}>+</button>
             </div>
         );

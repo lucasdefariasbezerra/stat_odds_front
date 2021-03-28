@@ -4,6 +4,7 @@ import { Input, Select, DatePicker } from 'antd';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { handleUpdate, fetchTournments } from './seasonAction';
+import SelectManager from '../shared/selectManager';
 import moment from 'moment';
 
 const { Option } = Select;
@@ -53,10 +54,9 @@ class SeasonForm extends Component {
          return moment(moment().format(dateFormat), dateFormat);
      }
 
-    handleTournmentChange = (key) => {
+    handleTournmentChange = (name, changedObject) => {
         const { handleUpdate, season } = this.props;
-        const tournment = { id: key, name: listMap['tournmentMap'][key]};
-        handleUpdate(season, 'tournment', tournment);
+        handleUpdate(season, name, changedObject);
     }
 
     mapList = (mapNode, list) => {
@@ -110,12 +110,12 @@ class SeasonForm extends Component {
                         format={dateFormat}
                     />
                 </div>
-
                 <div className='form-item'>
-                    <p>tournments:</p>
-                    <Select value={(tournment && tournment.name) || 'English Premier League'} onChange={this.handleTournmentChange} style={{ width: 225 }}>
-                        {this.mapList('tournmentMap', tournments)}
-                    </Select>
+                    <p>tournment:</p>
+                    <SelectManager name="tournment"
+                    value={(tournment && tournment.name) || 'English Premier League'}
+                    list={tournments}
+                    onChange={this.handleTournmentChange}/>
                 </div>
             </div>
         );

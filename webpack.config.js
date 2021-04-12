@@ -15,7 +15,8 @@ module.exports = {
         port: 3000,
         host: '0.0.0.0',
         contentBase: './public',
-        historyApiFallback: true
+        historyApiFallback: true,
+        hot: true
     },
     resolve: {
         extensions: ['.js', '.jsx']

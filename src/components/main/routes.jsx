@@ -1,12 +1,11 @@
 import React from 'react';
-import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
-import App from '../app';
+import { HashRouter as Router, Route, Switch} from 'react-router-dom';
 import About from '../about';
-import Pictures from '../shared/pictures';
 import TeamPage from '../teams/teamPage';
 import SeasonPage from '../seasons/seasonPage';
 import FileUploadPage from '../teams/fileUploadPage';
-import seasonPage from '../seasons/seasonPage';
+import StandingsPage from '../standings/standingsPage';
+import 'antd/dist/antd.css';
 
 const Routes = () => (
     <Router>
@@ -14,8 +13,8 @@ const Routes = () => (
             <Route exact path="/" component={TeamPage} />
             <Route path="/about" component={About} />
             <Route path="/team_upload" component={FileUploadPage} />
-            <Route path="/seasons" component={seasonPage} />
-            <Pictures path="/pictures" component={Pictures} />
+            <Route path="/seasons" component={SeasonPage} />
+            <Route path="/standings/:seasonId" component={StandingsPage}/>
             <Route path="*" component={TeamPage} />
         </Switch>
     </Router>

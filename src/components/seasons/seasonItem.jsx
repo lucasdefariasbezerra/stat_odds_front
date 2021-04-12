@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { TableOutlined } from '@ant-design/icons';
+import { Link } from 'react-router-dom';
 
 import '../../template/style.css';
 
 const SeasonItem = (props) => {
-    const { season, displayItemDetails } = props;
+    const { season } = props;
     return(
        <li className="list-style">
            <img src="https://historias.pontosmultiplus.com.br/wp-content/uploads/2018/06/Long-Beach_Foto_-Jon-Bilous-SHutterstock.jpg" />
@@ -13,7 +14,7 @@ const SeasonItem = (props) => {
                <h1 className="text-header">{season.name}</h1>
                <p>{season.seasonDate}</p>
            </div>
-           <TableOutlined style={{fontSize: '20px', cursor: 'pointer'}} onClick={() => {}}/>
+           <Link to={`/standings/${season.id}`}><TableOutlined style={{fontSize: '20px', cursor: 'pointer'}} onClick={() => {}}/></Link>
        </li>
    );
 };

@@ -18,6 +18,8 @@ export default (state = INITIAL_STATE, action) => {
             return { ...state, seasonDetails: action.payload };
         case SeasonActionType.LIST_TOURNMENT:
             return { ...state, tournments: action.payload };
+        case SeasonActionType.FETCH_SEASON_DETAILS:
+            return { ...state, seasonDetails: action.payload };
         default: {
             return state;
         }

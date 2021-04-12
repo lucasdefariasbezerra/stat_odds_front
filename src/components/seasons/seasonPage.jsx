@@ -84,7 +84,6 @@ class SeasonPage extends Component {
     }
 
     mapSeasons = () => {
-        console.log('here');
         const { page } = this.props;
         const { items } = page;
         if (items)

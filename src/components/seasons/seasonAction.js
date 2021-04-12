@@ -1,4 +1,4 @@
-import { querySeasons, queryTournments, addSeason } from './graphqlRequests';
+import { querySeasons, queryTournments, addSeason, querySeasonById } from './graphqlRequests';
 import { changeModalOpenStatus, handleFetchList, changeLoadingState, setToasterMessage, changeTriggerState } from '../shared/appStateAction';
 import * as SeasonActionType from '../shared/type';
 
@@ -49,6 +49,15 @@ export const handleUpdate = (currentObject, field, value) => {
             setTimeout(() => {
                 dispatch(changeTriggerState(false));
             }, 7000);
+        });
+    };
+};
+
+export const fetchSeasonDetails = (id) => {
+    return dispatch => {
+        querySeasonById(id).then((data) => {
+            console.log('season data ', data);
+            dispatch(handleFetchList(SeasonActionType.FETCH_SEASON_DETAILS, data.season));
         });
     };
 };

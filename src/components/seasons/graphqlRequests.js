@@ -15,6 +15,17 @@ const SEASON_PAGE = `
     }
   }`;
 
+  const SEASON_DETAILS = `
+  query seasonDetails($id: ID) {
+    season(id: $id) {
+      id
+      name
+      type
+      description
+      seasonDate
+    }
+}`;
+
   const TOURNMENTS = `query tournments {
     tournments {
       id
@@ -42,3 +53,6 @@ export const addSeason = (season) => {
   return request(url, ADD_SEASON, { season });
 };
 
+export const querySeasonById = (id) => {
+  return request(url, SEASON_DETAILS, { id });
+};

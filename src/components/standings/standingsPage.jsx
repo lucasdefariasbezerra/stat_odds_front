@@ -4,6 +4,7 @@ import { fetchSeasonDetails } from '../seasons/seasonAction';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import NavBar from '../shared/navbar/navBar';
+import MatchesTable from './matchesTable';
 
 const links = [
     {
@@ -40,7 +41,6 @@ class StandingsPage extends Component {
     componentDidMount() {
         const { match, fetchSeasonDetails } = this.props;
         const { params } = match;
-        console.log('params season ', params.seasonId);
         fetchSeasonDetails(params.seasonId);
 
     }
@@ -51,7 +51,10 @@ class StandingsPage extends Component {
         return (
             <div>
                 <NavBar links={links}/>
-                <h1>{`${name} ${seasonDate}`}</h1>
+                <div>
+                    <h1 className="standings-text">{`${name} ${seasonDate}`}</h1>
+                    <MatchesTable/>
+                </div>
             </div>
         );
     }

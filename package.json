@@ -61,7 +61,7 @@
     "@ant-design/compatible": "^1.0.4",
     "@ant-design/icons": "^4.2.1",
     "@babel/runtime": "^7.4.4",
-    "antd": "^3.16.6",
+    "antd": "^4.0.0",
     "cross-env": "5.1.5",
     "dotenv-webpack": "^6.0.0",
     "graphql-request": "^1.8.2",

@@ -10,6 +10,8 @@ import Toaster from '../shared/toaster';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import '../../template/style.css';
+import { UploadOutlined } from '@ant-design/icons';
+
 
 const links = [
   {
@@ -86,7 +88,7 @@ class FileUploadPage extends Component {
                       beforeUpload={this.handleBefore}
                       onRemove={() => {}}
                       defaultFileList={fileList}>
-                        <Button className='showButton'><Icon type="upload" /> Load File</Button>
+                        <Button className='showButton'><UploadOutlined /> Load File</Button>
                     </Upload>
                     <Button
                         type="primary"

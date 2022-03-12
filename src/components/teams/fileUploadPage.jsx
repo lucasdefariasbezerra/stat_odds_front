@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import '../../template/style.css';
 import NavBar from '../shared/navbar/navBar';
-import { Upload, Button, Icon } from 'antd';
+import { Upload, Button } from 'antd';
 import { bindActionCreators } from 'redux';
 import { setToasterMessage } from './teamAction';
 import { changeTriggerState } from '../shared/appStateAction';
@@ -34,6 +34,7 @@ class FileUploadPage extends Component {
     }
 
     static propTypes = {
+      match: PropTypes.objectOf(PropTypes.any),
       appState: PropTypes.objectOf(PropTypes.any),
       setToasterMessage: PropTypes.func,
       changeTriggerState: PropTypes.func
@@ -53,18 +54,20 @@ class FileUploadPage extends Component {
     }
 
     handleUpload = async () => {
-        const { setToasterMessage, changeTriggerState } = this.props;
+        const { setToasterMessage, changeTriggerState, match } = this.props;
+        const { params } = match;
         const baseUrl = process.env.UPLOAD_URL;
         const { fileList } = this.state;
         const formData = new FormData();
         formData.append('file', fileList[0]);
-        fetch(`${baseUrl}api/team/upload`, {
+        const target = params.target;
+        fetch(`${baseUrl}api/${target}/upload`, {
            method: 'POST',
            body: formData
         })
         .then(response => response.json())
         .then(data => {
-          setToasterMessage({message: 'team upload was successfully done', type: 'success'});
+          setToasterMessage({message: `${target} upload was successfully done`, type: 'success'});
           changeTriggerState(true);
           this.setState({ uploading: false, disabled: true });
           setTimeout(() => {

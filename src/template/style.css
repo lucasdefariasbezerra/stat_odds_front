@@ -259,3 +259,19 @@ span.toaster-text {
     font-weight: 600;
     font-family: 'Quicksand', sans-serif;  
 }
+
+.table-style {
+    padding: 1px 50px 1px 50px;
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 500;
+}
+
+.editable-row .ant-form-item-explain {
+    position: absolute;
+    top: 100%;
+    font-size: 24px;
+  }
+
+th {
+    font-weight: 600 !important;
+}

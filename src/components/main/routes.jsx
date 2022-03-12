@@ -12,7 +12,7 @@ const Routes = () => (
         <Switch>
             <Route exact path="/" component={TeamPage} />
             <Route path="/about" component={About} />
-            <Route path="/team_upload" component={FileUploadPage} />
+            <Route path="/file_upload/:target" component={FileUploadPage} />
             <Route path="/seasons" component={SeasonPage} />
             <Route path="/standings/:seasonId" component={StandingsPage}/>
             <Route path="*" component={TeamPage} />

@@ -7,9 +7,9 @@ const load_values = () => {
     for (let i = 0; i < 10; i++) {
         loadedVal.push({
             key: i.toString(),
-            name: `Edward ${i}`,
-            age: 32,
-            address: `London Park no. ${i}`
+            home: `Edward ${i}`,
+            score: `score`,
+            away: `away`
         });
     }
     return loadedVal;
@@ -49,18 +49,17 @@ const EditableCell = ({
     );
 };
 
-const MatchesTable = () => {
+const MatchesTable = (props) => {
     const [form] = Form.useForm();
-    const [data, setData] = useState(originData);
     const [editingKey, setEditingKey] = useState('');
-
+    const { onMatchSave, dataTable } = props;
     const isEditing = (record) => record.key === editingKey;
 
     const edit = (record) => {
         form.setFieldsValue({
-            name: '',
-            age: '',
-            address: '',
+            home: '',
+            away: '',
+            score: '',
             ...record
         });
         setEditingKey(record.key);
@@ -73,20 +72,8 @@ const MatchesTable = () => {
     const save = async (key) => {
         try {
             const row = await form.validateFields();
-            const newData = [...data];
-            const index = newData.findIndex((item) => key === item.key);
-
-            if (index > -1) {
-                const item = newData[index];
-                newData.splice(index, 1, { ...item, ...row });
-                setData(newData);
-                setEditingKey('');
-            } else {
-                newData.push(row);
-                setData(newData);
-                setEditingKey('');
-            }
-
+            onMatchSave(row, key);
+            setEditingKey('');
         } catch(errInfo) {
             console.log('Validate Failed:', errInfo);
         }
@@ -95,29 +82,44 @@ const MatchesTable = () => {
     const columns = [
 
         {
-            title: 'name',
-            dataIndex: 'name',
-            width: '25%',
+            title: 'HOME',
+            dataIndex: 'home',
+            width: '7%',
+            editable: false
+        },
+
+        {
+            title: 'SCORE',
+            dataIndex: 'score',
+            width: '2%',
             editable: true
         },
 
         {
-            title: 'age',
-            dataIndex: 'age',
-            width: '15%',
-            editable: true
+            title: 'AWAY',
+            dataIndex: 'away',
+            width: '7%',
+            editable: false
         },
 
         {
-            title: 'address',
-            dataIndex: 'address',
-            width: '40%',
-            editable: true
+            title: 'ROUND',
+            dataIndex: 'round',
+            width: '2%',
+            editable: false
         },
 
         {
-            title: 'operation',
+            title: 'DATE',
+            dataIndex: 'date',
+            width: '5%',
+            editable: false
+        },
+
+        {
+            title: 'ACTION',
             dataIndex: 'operation',
+            width: '10%',
             // eslint-disable-next-line react/display-name
             render: (_, record) => {
                 const editable = isEditing(record);
@@ -173,7 +175,9 @@ const MatchesTable = () => {
                         }
                     }}
                     bordered
-                    dataSource={data}
+                    className="table-style"
+                    rowClassName="editable-row"
+                    dataSource={dataTable}
                     columns={mergedColumns}
                     pagination={false}
                     />

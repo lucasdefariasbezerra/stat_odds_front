@@ -20,7 +20,7 @@ import * as ActionType from '../shared/type';
 const links = [
     {
         title: 'file upload',
-        url: '/team_upload',
+        url: '/file_upload/team',
         cName: 'nav-links'
     },
     {
@@ -78,6 +78,7 @@ class TeamPage extends Component {
     }
 
     hadlePageChange = (current, pageSize) => {
+        debugger;
         const { fetchList, changePageNum } = this.props;
         changePageNum(current - 1);
         fetchList((current - 1), pageSize);

@@ -32,7 +32,9 @@ const links = [
 
 class TeamPage extends Component {
     state = {
-        isEditMode: false
+        isEditMode: false,
+        pageNum: 1,
+        pageSize: 7
     };
 
     static propTypes = {
@@ -77,11 +79,11 @@ class TeamPage extends Component {
         fetchTeamDetails(id);
     }
 
-    hadlePageChange = (current, pageSize) => {
-        debugger;
-        const { fetchList, changePageNum } = this.props;
-        changePageNum(current - 1);
-        fetchList((current - 1), pageSize);
+    handlePageChange = (pageNum, pageSize) => {
+        const { fetchList } = this.props;
+        this.setState({ pageNum: pageNum, pageSize: pageSize });
+        const newPageNum = pageNum == 0 ? pageNum : (pageNum - 1);
+        fetchList((newPageNum), pageSize);
     }
 
     openNotification = (type, message, description) => {
@@ -174,8 +176,7 @@ class TeamPage extends Component {
     render() {
         const { page, teamDetails, appState, isOpened, isNewTeamOpened } = this.props;
         const { isLoading, toasterInfo, triggerNotification } = appState;
-        const { currentPageNum } = appState;
-        const { isEditMode } = this.state;
+        const { isEditMode, pageNum, pageSize } = this.state;
 
         return (
             <div>
@@ -200,9 +201,10 @@ class TeamPage extends Component {
                         isActionButttonsEnabled={true}
                         onContentDisplay={this.handleContentDisplay}
                         onModalAction={this.handleTeamInsertion}/>
-                <Paginator pageNum={currentPageNum}
+                <Paginator pageNum={pageNum}
+                           pageSize={pageSize}
                            total={page.total}
-                           pageEvent={this.hadlePageChange} />
+                           pageEvent={this.handlePageChange} />
                 <button className="add-button" onClick={() => this.handleNewTeam(!isNewTeamOpened)}>+</button>
             </div>
         );

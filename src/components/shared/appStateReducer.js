@@ -4,7 +4,8 @@ const INITIAL_STATE = {
     isLoading: false,
     triggerNotification: false,
     toasterInfo: { message: 'default message', type: 'success'},
-    currentPageNum: 0
+    currentPageNum: 0,
+    currentPageSize: 0
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -17,6 +18,8 @@ export default (state = INITIAL_STATE, action) => {
             return { ...state, toasterInfo: action.payload };
         case AppActionType.CHANGE_PAGE_NUM:
             return { ...state, currentPageNum: action.payload };
+        case AppActionType.CHANGE_PAGE_SIZE:
+            return { ...state, currentPageSize: action.payload };
         default: {
             return state;
         }

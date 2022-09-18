@@ -122,8 +122,9 @@ const MatchesTable = (props) => {
             width: '10%',
             // eslint-disable-next-line react/display-name
             render: (_, record) => {
+                debugger;
                 const editable = isEditing(record);
-                return editable ?
+                return record.processed == 0 && (editable ?
                 (
                     <span>
                         <Typography.Link
@@ -143,7 +144,7 @@ const MatchesTable = (props) => {
                    <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
                        Edit
                    </Typography.Link>
-                );
+                ));
             }
         }
     ];

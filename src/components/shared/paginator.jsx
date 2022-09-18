@@ -6,9 +6,11 @@ import '../../template/style.css';
 
 const Paginator = (props) => {
     const { pageNum, total, pageEvent, pageSize } = props;
+    const pageSizeOptions = [7, 10, 20, 50, 100];
+
     return(
         <div className='paginator'>
-            <Pagination pageNum={pageNum} pageSize={pageSize} total={total} onChange={pageEvent} />
+            <Pagination current={pageNum} pageSize={pageSize} total={total} onChange={pageEvent} pageSizeOptions={pageSizeOptions} />
         </div>
       );
 };

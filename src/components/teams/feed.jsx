@@ -65,7 +65,8 @@ class Feed extends Component {
     renderTeamDetails = () => {
       const { item } = this.props;
       const { isEditMode } = this.state;
-      console.log('item, ', item);
+      if (Object.keys(item).length === 0) return (<div></div>);
+
       const fieldList = [
           {
               field: 'Team Name',

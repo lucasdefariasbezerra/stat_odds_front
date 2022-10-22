@@ -14,11 +14,13 @@ import TeamForm from './teamForm';
 import PropTypes from 'prop-types';
 import { notification } from 'antd';
 import * as ActionType from '../shared/type';
+import LoginManagement from '../login/loginManagement';
 
 class TeamPage extends Component {
 
     static propTypes = {
         page: PropTypes.objectOf(PropTypes.any),
+        history: PropTypes.objectOf(PropTypes.any),
         teamDetails: PropTypes.objectOf(PropTypes.any),
         fetchList: PropTypes.func,
         fetchTeamDetails: PropTypes.func,
@@ -37,6 +39,7 @@ class TeamPage extends Component {
 
     static defaultProps = {
         page: {},
+        history: {},
         teamDetails: {},
         fetchList: () => {},
         fetchTeamDetails: () => {},
@@ -109,14 +112,20 @@ class TeamPage extends Component {
         return (<div className='details-text'><TeamForm team={teamDetails}/></div>);
     }
 
-    render() {
+    handlePageRendering = (page) => {
+        const { status } = page;
+        if (status === 200) {
+            return this.renderTeamPageContent();
+        } else {
+            return (<LoginManagement />);
+        }
+    }
+
+    renderTeamPageContent = () => {
         const { page, teamDetails, appState, isOpened, isNewTeamOpened } = this.props;
-        const { isLoading, toasterInfo, triggerNotification } = appState;
-        const { currentPageNum } = appState;
-        return (
-            <div>
-                { triggerNotification && (<Toaster message={toasterInfo.message} type={toasterInfo.type}/>)}
-                <NavBar />
+        const { isLoading, currentPageNum } = appState;
+        return (<div>
+            <NavBar />
                 <Feed position="center"
                     content="TEAM"
                     list={page.items}
@@ -127,16 +136,26 @@ class TeamPage extends Component {
                     onModalChange={this.handleModalChange}
                     opened={isOpened} />
                 <ModalManager title="Create a new Team"
-                        opened={isNewTeamOpened}
-                        onModalDisplay={this.handleNewTeam}
-                        loadState={isLoading}
-                        isEditMode={true}
-                        onContentDisplay={this.handleContentDisplay}
-                        onModalAction={this.handleTeamInsertion}/>
+                    opened={isNewTeamOpened}
+                    onModalDisplay={this.handleNewTeam}
+                    loadState={isLoading}
+                    isEditMode={true}
+                    onContentDisplay={this.handleContentDisplay}
+                    onModalAction={this.handleTeamInsertion}/>
                 <Paginator pageNum={currentPageNum}
-                           total={page.total}
-                           pageEvent={this.hadlePageChange} />
-                <button className="add-button" onClick={() => this.handleNewTeam(!isNewTeamOpened)}>+</button>
+                    total={page.total}
+                    pageEvent={this.hadlePageChange} />
+            <button className="add-button" onClick={() => this.handleNewTeam(!isNewTeamOpened)}>+</button>
+        </div>);
+    }
+
+    render() {
+        const { page, appState } = this.props;
+        const { toasterInfo, triggerNotification } = appState;
+        return (
+            <div>
+                { triggerNotification && (<Toaster message={toasterInfo.message} type={toasterInfo.type}/>)}
+                { Object.keys(page).length > 0 && this.handlePageRendering(page)}
             </div>
         );
     }

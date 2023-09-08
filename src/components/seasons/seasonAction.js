@@ -5,7 +5,15 @@ import * as SeasonActionType from '../shared/type';
 export const fetchList = (pageNum, pageSize) => {
     return dispatch => {
         return querySeasons(pageNum, pageSize).then((data) => {
-            dispatch(handleFetchList(SeasonActionType.LIST_SEASON, data.paginatedSeasons));
+            const seasonPage = data.paginatedSeasons;
+            dispatch(handleFetchList(SeasonActionType.LIST_SEASON, { ...seasonPage, status: 200 }));
+        }).catch((error) => {
+            const { message } = error.response.errors[0];
+            console.log('error message ', message);
+            if (message == '401: Unauthorized') {
+                localStorage.setItem('odds-user-info', "");
+                dispatch(handleFetchList(SeasonActionType.LIST_SEASON, { status: 401 }));
+            }
         });
     };
 };

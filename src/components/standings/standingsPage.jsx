@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { fetchSeasonDetails } from '../seasons/seasonAction';
-import { fetchMatchList, handleMatchSave, changeLoadingState, handleScoreSave } from '../standings/matchAction';
+import { fetchMatchList, handleMatchSave, changeLoadingState, handleScoreSave, handleMatchReset } from '../standings/matchAction';
 import { changeTriggerState } from '../shared/appStateAction';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -45,6 +45,7 @@ class StandingsPage extends Component {
        changeLoadingState: PropTypes.func,
        fetchMatchList: PropTypes.func,
        handleMatchSave: PropTypes.func,
+       handleMatchReset: PropTypes.func,
        seasonDetails: PropTypes.objectOf(PropTypes.any)
     };
 
@@ -56,6 +57,7 @@ class StandingsPage extends Component {
         changeLoadingState: () => {},
         fetchMatchList: () => {},
         handleMatchSave: () => {},
+        handleMatchReset: () => {},
         seasonDetails: {}
     };
 
@@ -86,7 +88,23 @@ class StandingsPage extends Component {
         return mappedItems;
     }
 
+    onMatchReset = (key) => {
+        debugger;
+        const { page, handleMatchReset, match } = this.props;
+        const { params } = match;
+        const newData = [...page.items];
+        const index = newData.findIndex((item) => item.id === key);
+        const { pageNum, pageSize } = this.state;
+
+        if (index > -1) {
+            const item = newData[index];
+            const newItem = {...item, processed: 0 };
+            handleMatchReset(newItem, pageNum, pageSize, parseInt(params.seasonId));
+        }
+    }
+
     onMatchSave = (row, key) => {
+        debugger;
         const { page } = this.props;
         const newData = [...page.items];
         const index = newData.findIndex((item) => item.id === key);
@@ -102,6 +120,7 @@ class StandingsPage extends Component {
     }
 
     handleChangedMatches = (match) => {
+        debugger;
         const { changedMatches } = this.state;
         const found = changedMatches.find(current => current.id === match.id);
         if (found) {
@@ -117,10 +136,11 @@ class StandingsPage extends Component {
     }
 
     handleMatchesUpdate = () => {
-        const { changedMatches } = this.state;
-        const { handleScoreSave, changeLoadingState } = this.props;
+        const { changedMatches, pageNum, pageSize } = this.state;
+        const { handleScoreSave, changeLoadingState, match } = this.props;
+        const { params } = match;
         changeLoadingState(true);
-        handleScoreSave(changedMatches);
+        handleScoreSave(changedMatches, pageNum, pageSize, parseInt(params.seasonId));
         this.setState({
             changedMatches: []
         });
@@ -138,7 +158,7 @@ class StandingsPage extends Component {
                 <NavBar links={links}/>
                 <div>
                     <h1 className="standings-text">{`${name} ${seasonDate}`}</h1>
-                    <MatchesTable dataTable={mappedItems} onMatchSave={this.onMatchSave}/>
+                    <MatchesTable dataTable={mappedItems} onMatchSave={this.onMatchSave} onMatchReset={this.onMatchReset}/>
                 </div>
                 <div className="bottom-position">
                     <Paginator pageNum={pageNum} pageSize={pageSize} total={page.total} pageEvent={this.handlePageChange}/>
@@ -153,5 +173,5 @@ class StandingsPage extends Component {
 
 const mapStateToProps = state => ({ seasonDetails: state.season.seasonDetails, page: state.match.page, appState: state.appState });
 
-const mapDispatchToProps = dispatch => bindActionCreators({ fetchSeasonDetails, fetchMatchList, handleMatchSave, handleScoreSave, changeLoadingState, changeTriggerState }, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators({ fetchSeasonDetails, fetchMatchList, handleMatchSave, handleScoreSave, changeLoadingState, changeTriggerState, handleMatchReset }, dispatch);
 export default connect(mapStateToProps, mapDispatchToProps)(StandingsPage);

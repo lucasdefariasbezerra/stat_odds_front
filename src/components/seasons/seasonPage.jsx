@@ -14,6 +14,7 @@ import ModalManager from '../shared/modalManager';
 import NavBar from '../shared/navbar/navBar';
 import PropTypes from 'prop-types';
 import * as ActionType from '../shared/type';
+import LoginManagement from '../login/loginManagement';
 
 const links = [
     {
@@ -95,12 +96,21 @@ class SeasonPage extends Component {
         fetchList(0, 5);
     }
 
-    render() {
+    handlePageRendering = (page) => {
+        const { status } = page;
+        if (status === 200) {
+            return this.renderSeasonPageContent();
+        } else {
+            return (<LoginManagement />);
+        }
+    }
+
+    renderSeasonPageContent = () => {
         const { page, appState, isNewSeasonOpened } = this.props;
-        const { currentPageNum, isLoading, triggerNotification, toasterInfo } = appState;
+        const { currentPageNum, isLoading } = appState;
+
         return (
-            <div>
-                { triggerNotification && (<Toaster message={toasterInfo.message} type={toasterInfo.type}/>) }
+           <div>
                 <NavBar links={links}/>
                 <Feed position="center"
                     content="SEASON"
@@ -113,12 +123,22 @@ class SeasonPage extends Component {
                     isActionButttonsEnabled={true}
                     onContentDisplay={this.handleContentDisplay}
                     onModalAction={this.handleSeasonInsertion}
-                    />
+                />
                 <Paginator pageNum={currentPageNum}
-                           total={page.total}
-                           pageEvent={this.hadlePageChange}
-                           pageSize={5} />
+                       total={page.total}
+                       pageEvent={this.hadlePageChange}
+                       pageSize={5} />
                 <button className="add-button" onClick={() => this.handleNewSeason(!isNewSeasonOpened)}>+</button>
+            </div>);
+    }
+
+    render() {
+        const { appState, page } = this.props;
+        const { triggerNotification, toasterInfo } = appState;
+        return (
+            <div>
+                { triggerNotification && (<Toaster message={toasterInfo.message} type={toasterInfo.type}/>) }
+                { Object.keys(page).length > 0 && this.handlePageRendering(page)}
             </div>
         );
     }

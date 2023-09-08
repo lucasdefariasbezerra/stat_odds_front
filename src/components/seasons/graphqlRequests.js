@@ -1,4 +1,4 @@
-import { request } from 'graphql-request';
+import { buildGQLClient, getToken } from '../shared/gqlUtils';
 
 const url = process.env.API_URL;
 const SEASON_PAGE = `
@@ -42,17 +42,21 @@ const ADD_SEASON = `
 }`;
 
 export const querySeasons = (pageNum, pageSize) => {
-    return request(url, SEASON_PAGE, { pageNum, pageSize });
+  const client = buildGQLClient(url, getToken());
+  return client.request(SEASON_PAGE, { pageNum, pageSize });
 };
 
 export const queryTournments = () => {
-  return request(url, TOURNMENTS);
+  const client = buildGQLClient(url, getToken());
+  return client.request(TOURNMENTS);
 };
 
 export const addSeason = (season) => {
-  return request(url, ADD_SEASON, { season });
+  const client = buildGQLClient(url, getToken());
+  return client.request(ADD_SEASON, { season });
 };
 
 export const querySeasonById = (id) => {
-  return request(url, SEASON_DETAILS, { id });
+  const client = buildGQLClient(url, getToken());
+  return client.request(SEASON_DETAILS, { id });
 };

@@ -1,4 +1,6 @@
 import { request } from 'graphql-request';
+import { buildGQLClient, getToken } from '../shared/gqlUtils';
+
 
 const url = process.env.API_URL;
 
@@ -30,10 +32,28 @@ mutation updateScores($scoreList:[ScoreUpdatePayload]) {
 }
 `;
 
+const RESET_MATCH = `
+mutation resetMatch($match:ScoreUpdatePayload) {
+  resetMatch(match: $match) {
+    status
+    description
+  }
+}
+`;
+
 export const queryPaginatedMatches = (pageNum, pageSize, seasonId) => {
-  return request(url, MATCH_PAGE, { pageNum, pageSize, seasonId });
+  const client = buildGQLClient(url, getToken());
+  return client.request(MATCH_PAGE, { pageNum, pageSize, seasonId });
 };
 
 export const saveMatchesScore = (scoreList) => {
-  return request(url, UPDATE_SCORE, { scoreList });
+  debugger;
+  const client = buildGQLClient(url, getToken());
+  return client.request(UPDATE_SCORE, { scoreList });
 };
+
+export const resetMatch = (match) => {
+  debugger;
+  const client = buildGQLClient(url, getToken());
+  return client.request(RESET_MATCH, { match });
+}

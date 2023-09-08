@@ -6,9 +6,10 @@ import SeasonPage from '../seasons/seasonPage';
 import FileUploadPage from '../teams/fileUploadPage';
 import StandingsPage from '../standings/standingsPage';
 import 'antd/dist/antd.css';
+import LoginManagement from '../login/loginManagement';
 
 const Routes = () => (
-    <Router>
+    <Router >
         <Switch>
             <Route exact path="/" component={TeamPage} />
             <Route path="/about" component={About} />
@@ -16,6 +17,7 @@ const Routes = () => (
             <Route path="/seasons" component={SeasonPage} />
             <Route path="/standings/:seasonId" component={StandingsPage}/>
             <Route path="*" component={TeamPage} />
+            <Route exact path="/logout" component={LoginManagement} />
         </Switch>
     </Router>
 );

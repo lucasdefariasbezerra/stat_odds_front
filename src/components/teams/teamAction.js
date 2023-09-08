@@ -19,7 +19,15 @@ export const handleUpdate = (currentObject, field, value) => {
 export const fetchList = (pageNum, pageSize) => {
     return dispatch => {
         return queryTeams(pageNum, pageSize).then((data) => {
-            dispatch(handleFetchList(TeamActionType.LIST_TEAM, data.paginatedTeams));
+            const teamPage = data.paginatedTeams;
+            dispatch(handleFetchList(TeamActionType.LIST_TEAM, {...teamPage, status: 200}));
+        }).catch((error) => {
+            const { message } = error.response.errors[0];
+            console.log('error message ', message);
+            if (message == '401: Unauthorized') {
+                localStorage.setItem('odds-user-info', "");
+                dispatch(handleFetchList(TeamActionType.LIST_TEAM, { status: 401 }));
+            }
         });
     };
 };
@@ -78,7 +86,16 @@ export const changeLoadingState = (loading) => {
 export const fetchTeamDetails = (id) => {
     return dispatch => {
         return queryTeamDetails(id).then((data) => {
+            console.log('data ', data);
             dispatch(handleTeamDetails(data));
+        }).catch((error) => {
+            console.log('error', error);
+            const outcomingMessage = error.response.errors[0].message;
+            if (['unauthorized', 'invalid_token'].includes(outcomingMessage)) {
+                dispatch(handleFetchList(TeamActionType.LIST_TEAM, { status: 401 }));
+                localStorage.setItem('odds-user-info', "");
+            }
+            console.error(error);
         });
     };
 };

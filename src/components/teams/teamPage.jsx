@@ -16,6 +16,7 @@ import ViewItem from '../shared/viewItem';
 import PropTypes from 'prop-types';
 import { Checkbox } from 'antd';
 import * as ActionType from '../shared/type';
+import LoginManagement from '../login/loginManagement';
 
 const links = [
     {
@@ -39,6 +40,7 @@ class TeamPage extends Component {
 
     static propTypes = {
         page: PropTypes.objectOf(PropTypes.any),
+        history: PropTypes.objectOf(PropTypes.any),
         teamDetails: PropTypes.objectOf(PropTypes.any),
         fetchList: PropTypes.func,
         fetchTeamDetails: PropTypes.func,
@@ -57,6 +59,7 @@ class TeamPage extends Component {
 
     static defaultProps = {
         page: {},
+        history: {},
         teamDetails: {},
         fetchList: () => {},
         fetchTeamDetails: () => {},
@@ -166,22 +169,40 @@ class TeamPage extends Component {
               <Checkbox onChange={this.onChange}>edit</Checkbox>
           </div>
         );
-      }
+    }
 
     componentDidMount() {
         const { fetchList } = this.props;
         fetchList(0, 7);
     }
 
-    render() {
+    manageRelogin() {
+        const { page, fetchList } = this.props;
+        const { status } = page;
+        const token = localStorage.getItem('odds-user-info');
+
+        if (token && status === 401) {
+            fetchList(0, 7);
+        }
+    }
+
+    handlePageRendering = (page) => {
+        const { status } = page;
+        this.manageRelogin();
+        if (status === 200) {
+            return this.renderTeamPageContent();
+        } else {
+            return (<LoginManagement />);
+        }
+    }
+
+    renderTeamPageContent = () => {
         const { page, teamDetails, appState, isOpened, isNewTeamOpened } = this.props;
-        const { isLoading, toasterInfo, triggerNotification } = appState;
+        const { isLoading } = appState;
         const { isEditMode, pageNum, pageSize } = this.state;
 
-        return (
-            <div>
-                { triggerNotification && (<Toaster message={toasterInfo.message} type={toasterInfo.type}/>)}
-                <NavBar links={links}/>
+        return (<div>
+            <NavBar links={links} />
                 <Feed position="center"
                     content="TEAM"
                     list={page.items}
@@ -194,6 +215,7 @@ class TeamPage extends Component {
                     onDetailsRender={this.renderTeamDetails}
                     onModalChange={this.handleModalChange}
                     opened={isOpened} />
+
                 <ModalManager title="Create a new Team"
                         opened={isNewTeamOpened}
                         onModalDisplay={this.handleNewTeam}
@@ -206,6 +228,16 @@ class TeamPage extends Component {
                            total={page.total}
                            pageEvent={this.handlePageChange} />
                 <button className="add-button" onClick={() => this.handleNewTeam(!isNewTeamOpened)}>+</button>
+        </div>);
+    }
+
+    render() {
+        const { page, appState } = this.props;
+        const { toasterInfo, triggerNotification } = appState;
+        return (
+            <div>
+                { triggerNotification && (<Toaster message={toasterInfo.message} type={toasterInfo.type}/>)}
+                { Object.keys(page).length > 0 && this.handlePageRendering(page)}
             </div>
         );
     }

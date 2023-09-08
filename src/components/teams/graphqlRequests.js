@@ -1,4 +1,5 @@
 import { request } from 'graphql-request';
+import { buildGQLClient, getToken } from '../shared/gqlUtils';
 
 const url = process.env.API_URL;
 const TEAM_PAGE = `
@@ -63,25 +64,31 @@ mutation addTeam($team:teamRequestPayload) {
 `;
 
 export const queryTeams = (pageNum, pageSize) => {
-    return request(url, TEAM_PAGE, { pageNum, pageSize });
+    const client = buildGQLClient(url, getToken());
+    return client.request(TEAM_PAGE, { pageNum, pageSize });
 };
 
 export const queryTeamDetails = (id) => {
-  return request(url, TEAM_DETAILS, { id });
+  const client = buildGQLClient(url, getToken());
+  return client.request(TEAM_DETAILS, { id });
 };
 
 export const querySports = () => {
-  return request(url, SPORTS);
+  const client = buildGQLClient(url, getToken());
+  return client.request(SPORTS);
 };
 
 export const queryCountries = () => {
-  return request(url, COUNTRIES);
+  const client = buildGQLClient(url, getToken());
+  return client.request(COUNTRIES);
 };
 
 export const updateTeams = (team) => {
-  return request(url, UPDATE_TEAM, { team });
+  const client = buildGQLClient(url, getToken());
+  return client.request(UPDATE_TEAM, { team });
 };
 
 export const addTeam = (team) => {
-  return request(url, ADD_TEAM, { team });
+  const client = buildGQLClient(url, getToken());
+  return client.request(ADD_TEAM, { team });
 };

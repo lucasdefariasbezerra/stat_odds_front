@@ -11,6 +11,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import '../../template/style.css';
 import { UploadOutlined } from '@ant-design/icons';
+import { getToken } from '../shared/gqlUtils';
 
 
 const links = [
@@ -61,9 +62,13 @@ class FileUploadPage extends Component {
         const formData = new FormData();
         formData.append('file', fileList[0]);
         const target = params.target;
+        const headerReq = new Headers();
+        headerReq.append('Authorization', `Bearer ${getToken()}`);
+
         fetch(`${baseUrl}api/${target}/upload`, {
            method: 'POST',
-           body: formData
+           body: formData,
+           headers: headerReq
         })
         .then(response => response.json())
         .then(data => {

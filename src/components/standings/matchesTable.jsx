@@ -52,7 +52,7 @@ const EditableCell = ({
 const MatchesTable = (props) => {
     const [form] = Form.useForm();
     const [editingKey, setEditingKey] = useState('');
-    const { onMatchSave, dataTable } = props;
+    const { onMatchSave, onMatchReset, dataTable } = props;
     const isEditing = (record) => record.key === editingKey;
 
     const edit = (record) => {
@@ -63,6 +63,10 @@ const MatchesTable = (props) => {
             ...record
         });
         setEditingKey(record.key);
+    };
+
+    const reset = (recordKey) => {
+        onMatchReset(recordKey);
     };
 
     const cancel = () => {
@@ -78,6 +82,8 @@ const MatchesTable = (props) => {
             console.log('Validate Failed:', errInfo);
         }
     };
+
+
 
     const columns = [
 
@@ -122,29 +128,32 @@ const MatchesTable = (props) => {
             width: '10%',
             // eslint-disable-next-line react/display-name
             render: (_, record) => {
-                debugger;
                 const editable = isEditing(record);
-                return record.processed == 0 && (editable ?
-                (
-                    <span>
-                        <Typography.Link
-                         onClick={() => save(record.key)}
-                         style={{ marginRight: 8 }}
-                        >
-                            Save
+                return record.processed == 1 ?
+                (<Typography.Link disabled={editingKey !== ''} onClick={() => reset(record.key)}>
+                    unprocess
+                </Typography.Link>)
+                 :
+                (editable ?
+                    (
+                        <span>
+                            <Typography.Link
+                            onClick={() => save(record.key)}
+                            style={{ marginRight: 8 }}>
+                                Save
+                            </Typography.Link>
+
+                            <Popconfirm title="Sure to cancel?" onConfirm={cancel}>
+                                <a>Cancel</a>
+                            </Popconfirm>
+                        </span>
+                    ) :
+
+                    (
+                        <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
+                            Edit
                         </Typography.Link>
-
-                        <Popconfirm title="Sure to cancel?" onConfirm={cancel}>
-                            <a>Cancel</a>
-                        </Popconfirm>
-                    </span>
-                ) :
-
-                (
-                   <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
-                       Edit
-                   </Typography.Link>
-                ));
+                    ));
             }
         }
     ];
